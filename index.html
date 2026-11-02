@@ -1,0 +1,2485 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiệm Bánh Quy Thủ Công Sweet Crumb</title>
+  <!-- Tailwind CSS & FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FFFDF7',
+            pastelPink: '#FAD2E1',
+            butter: '#FFF1B5',
+            cocoa: '#5C3A21',
+            cocoaLight: '#8C6245',
+            caramel: '#C17817'
+          },
+          fontFamily: {
+            sans: ['Quicksand', 'sans-serif'],
+            serif: ['Playfair Display', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-pastelPink selection:text-cocoa">
+
+  <!-- ========================================== -->
+  <!-- 1. SPLASH SCREEN & ENTRANCE CURTAIN        -->
+  <!-- ========================================== -->
+  <div id="splash-screen" class="fixed inset-0 z-[9999] flex items-center justify-center bg-cocoa overflow-hidden cursor-pointer" title="Nhấn để vào tiệm">
+    <div class="curtain-panel curtain-left"></div>
+    <div class="curtain-panel curtain-right"></div>
+    <div class="splash-content text-center px-6">
+      <div class="w-28 h-28 mx-auto mb-4 bg-white/90 rounded-full border-4 border-cocoa flex items-center justify-center shadow-2xl animate-bounce overflow-hidden p-2">
+        <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-full" crossorigin="anonymous" />
+      </div>
+      <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-cream tracking-wide">Sweet Cake</h1>
+      <p class="text-xs sm:text-sm text-pastelPink font-bold mt-2 uppercase tracking-widest">Tiệm Bánh Ngọt & Bánh Quy Thủ Công</p>
+      <div class="w-48 h-3 bg-cream border-2 border-cocoa rounded-full mx-auto mt-6 overflow-hidden p-0.5">
+        <div id="splash-bar" class="w-0 h-full bg-caramel rounded-full transition-all duration-1000"></div>
+      </div>
+      <p class="text-[11px] text-pastelPink mt-3 font-semibold">Chạm hoặc đợi để mở cửa tiệm bánh...</p>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 2. TOAST NOTIFICATION CONTAINER            -->
+  <!-- ========================================== -->
+  <div id="toast-container" class="fixed bottom-6 right-6 z-[9998] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================== -->
+  <!-- 3. NAVIGATION BAR                          -->
+  <!-- ========================================== -->
+  <nav class="sticky top-0 z-50 bg-cream/90 backdrop-blur-md border-b-2 border-cocoa/15 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center shadow-[0_3px_0_#5C3A21] group-hover:rotate-6 transition-transform overflow-hidden p-1">
+          <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
+        </div>
+        <div>
+          <span class="font-serif text-xl sm:text-2xl font-bold text-cocoa block leading-tight">Sweet Cake</span>
+          <span class="text-[10px] uppercase font-bold text-cocoaLight tracking-widest block">Handmade Bakery</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-8 font-bold text-sm text-cocoa">
+        <a href="#catalog" class="hover:text-caramel transition-colors">Thực Đơn</a>
+        <a href="#box-builder" class="hover:text-caramel transition-colors">Tự Tạo Hộp Bánh</a>
+        <a href="#story" class="hover:text-caramel transition-colors">Câu Chuyện</a>
+        <a href="#reviews" class="hover:text-caramel transition-colors">Đánh Giá</a>
+        <a href="#track-order" class="hover:text-caramel transition-colors">Tra Cứu Đơn</a>
+      </div>
+        <!-- Actions & Admin Controls -->
+        <div class="flex items-center gap-3">
+          <!-- Admin Quick Access Button (Only appears for Admin) -->
+          <button id="nav-admin-btn" onclick="openAdminModal()" class="hidden btn-3d-butter px-3.5 py-2 rounded-2xl text-xs font-bold items-center gap-1.5" title="Bảng điều khiển Quản trị">
+            <i class="fa-solid fa-crown text-amber-700"></i>
+            <span class="hidden sm:inline">Quản Trị Admin</span>
+          </button>
+
+          <!-- Wishlist Button -->
+          <button onclick="openWishlistModal()" class="relative p-2.5 rounded-2xl bg-cream border-2 border-cocoa text-cocoa hover:bg-pastelPink transition-colors shadow-sm" title="Sản phẩm yêu thích">
+            <i class="fa-regular fa-heart text-base"></i>
+            <span id="wishlist-badge" class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-pastelPink border-2 border-cocoa text-cocoa rounded-full text-[10px] font-extrabold flex items-center justify-center">0</span>
+          </button>
+
+          <!-- Cart Trigger -->
+          <button onclick="toggleCartDrawer(true)" class="btn-3d-cocoa px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2">
+            <i class="fa-solid fa-basket-shopping text-pastelPink"></i>
+            <span class="hidden sm:inline">Giỏ Hàng</span>
+            <span id="cart-count-badge" class="w-5 h-5 rounded-full bg-pastelPink text-cocoa text-[11px] font-extrabold flex items-center justify-center">0</span>
+          </button>
+
+          <!-- User / Auth Profile Button -->
+          <button onclick="openAuthModal()" class="btn-3d-cream px-3.5 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-1.5" title="Tài khoản cá nhân">
+            <i class="fa-regular fa-user text-cocoa"></i>
+            <span id="auth-btn-label" class="hidden lg:inline">Khách Hàng</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================== -->
+  <!-- 4. HERO SECTION                            -->
+  <!-- ========================================== -->
+  <header class="relative overflow-hidden pt-8 pb-16 lg:py-24 border-b-2 border-cocoa/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <!-- Hero Text Content -->
+        <div class="lg:col-span-7 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-butter border-2 border-cocoa text-xs font-bold text-cocoa mb-6 shadow-sm">
+            <span>✨</span> 100% Bơ Pháp & Sô-Cô-La Bỉ Nhập Khẩu
+          </div>
+          <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold text-cocoa leading-[1.15]">
+            Hương Vị Ngọt Ngào <br/>
+            <span class="text-caramel italic">Ấm Áp Mỗi Ngày</span>
+          </h1>
+          <p class="mt-6 text-sm sm:text-base text-cocoaLight font-medium max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Từng chiếc bánh quy được cân chỉnh độ ngọt vừa phải, nướng mới mỗi sáng để giữ trọn kết cấu mềm ẩm bên trong và giòn rụm bên ngoài. Trải nghiệm vị giác tinh tế từ tiệm bánh nhà làm.
+          </p>
+          <div class="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-4">
+            <a href="#catalog" class="btn-3d-cocoa px-7 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-2">
+              <i class="fa-solid fa-cookie-bite"></i> Khám Phá Menu Bánh
+            </a>
+            <a href="#box-builder" class="btn-3d-pink px-7 py-3.5 rounded-2xl text-sm font-bold flex items-center gap-2">
+              <i class="fa-solid fa-gift"></i> Tự Tạo Hộp Quà
+            </a>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="mt-12 grid grid-cols-3 gap-6 pt-8 border-t border-cocoa/15 max-w-md mx-auto lg:mx-0">
+            <div>
+              <div class="font-serif text-2xl font-bold text-cocoa">15+</div>
+              <div class="text-xs text-cocoaLight font-semibold mt-0.5">Dòng bánh thủ công</div>
+            </div>
+            <div>
+              <div class="font-serif text-2xl font-bold text-cocoa">5.0★</div>
+              <div class="text-xs text-cocoaLight font-semibold mt-0.5">Từ 2.400+ khách hàng</div>
+            </div>
+            <div>
+              <div class="font-serif text-2xl font-bold text-cocoa">30 phút</div>
+              <div class="text-xs text-cocoaLight font-semibold mt-0.5">Giao nhanh hỏa tốc</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Showcase Platter -->
+        <div class="lg:col-span-5 relative flex items-center justify-center">
+          <div class="w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-pastelPink/60 border-4 border-cocoa absolute -z-10 shadow-inner flex items-center justify-center"></div>
+          <div class="w-64 sm:w-80 h-64 sm:h-80 rounded-full bg-butter/50 border-2 border-dashed border-cocoa/40 absolute -z-10 animate-spin" style="animation-duration: 45s;"></div>
+          
+          <div class="relative text-center p-6 bg-cream/80 backdrop-blur-md rounded-[2.5rem] border-2 border-cocoa shadow-[0_12px_0_#5C3A21] max-w-sm w-full">
+            <!-- Floating Badge -->
+            <span class="absolute -top-4 -right-2 px-3.5 py-1.5 rounded-full bg-pastelPink border-2 border-cocoa text-xs font-extrabold shadow-sm badge-pop">
+              🔥 Bán Chạy #1
+            </span>
+
+            <div id="hero-cookie-svg" class="py-4 cursor-pointer" onclick="quickAddHeroCookie(event)">
+              <!-- Rendered via JS -->
+            </div>
+
+            <h3 id="hero-cookie-name" class="font-serif text-2xl font-bold text-cocoa mt-2">Classic Choco Lava</h3>
+            <p id="hero-cookie-desc" class="text-xs text-cocoaLight mt-1 px-2">Bánh quy mềm nhân sô-cô-la đen tan chảy rắc muối biển hồng</p>
+            
+            <div class="mt-5 flex items-center justify-between px-4">
+              <span id="hero-cookie-price" class="font-serif text-xl font-bold text-cocoa">42.000đ</span>
+              <button onclick="quickAddHeroCookie(event)" class="btn-3d-cocoa px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5">
+                <i class="fa-solid fa-plus text-pastelPink"></i> Thêm nhanh
+              </button>
+            </div>
+
+            <!-- Carousel Dots -->
+            <div class="mt-6 flex items-center justify-center gap-2">
+              <button onclick="switchHeroCookie(0)" class="hero-dot w-7 h-7 rounded-full bg-[#7A4B2A] border-2 border-cocoa ring-2 ring-offset-2 ring-cocoa transition-all" title="Choco Lava"></button>
+              <button onclick="switchHeroCookie(1)" class="hero-dot w-7 h-7 rounded-full bg-[#FAD2E1] border-2 border-cocoa transition-all opacity-60" title="Strawberry Melt"></button>
+              <button onclick="switchHeroCookie(2)" class="hero-dot w-7 h-7 rounded-full bg-[#A3C585] border-2 border-cocoa transition-all opacity-60" title="Matcha Macadamia"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================== -->
+  <!-- 5. PRODUCT CATALOG SECTION                 -->
+  <!-- ========================================== -->
+  <section id="catalog" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-caramel bg-butter px-3.5 py-1 rounded-full border border-cocoa/30 inline-block mb-3">Thực Đơn Hằng Ngày</span>
+      <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-cocoa">Tủ Bánh Quy Mới Ra Lò</h2>
+      <p class="text-xs sm:text-sm text-cocoaLight mt-2 font-medium">Từng chiếc bánh được cân chỉnh độ ngọt và nướng vừa tới để giữ trọn kết cấu mềm ẩm bên trong.</p>
+    </div>
+
+    <!-- Admin Bulk Image Upload Toolbar (Only visible to Admin) -->
+    <div id="admin-bulk-upload-wrapper" class="hidden mb-6 p-4 rounded-3xl bg-butter/80 border-2 border-dashed border-cocoa flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">👑</span>
+        <div>
+          <h4 class="font-bold text-xs text-cocoa uppercase">Khu vực quản trị sản phẩm (Admin)</h4>
+          <p class="text-[11px] text-cocoaLight">Thêm bánh quy mới vào thực đơn hoặc tải ảnh lên để thay thế hình ảnh sản phẩm.</p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button onclick="openAddProductModal()" class="btn-3d-pink px-4 py-2 rounded-2xl text-xs font-bold inline-flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-cocoa"></i> Thêm sản phẩm mới
+        </button>
+        <label class="btn-3d-cocoa px-4 py-2 rounded-2xl text-xs font-bold cursor-pointer inline-flex items-center gap-2">
+          <i class="fa-solid fa-cloud-arrow-up text-pastelPink"></i> Chọn ảnh bánh hàng loạt
+          <input type="file" accept="image/*" class="hidden" onchange="handleBulkImageUpload(event)">
+        </label>
+      </div>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="bg-cream border-2 border-cocoa rounded-[2rem] p-4 sm:p-6 mb-10 shadow-[0_6px_0_#5C3A21]">
+      <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+        <!-- Categories Tabs -->
+        <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+          <button onclick="filterCategory('all')" data-cat="all" class="cat-btn btn-3d-cocoa px-4 py-2 rounded-full text-xs sm:text-sm font-bold">
+            Tất cả (9)
+          </button>
+          <button onclick="filterCategory('soft')" data-cat="soft" class="cat-btn btn-3d-cream px-4 py-2 rounded-full text-xs sm:text-sm font-bold">
+            🍪 Soft Cookies (Mềm)
+          </button>
+          <button onclick="filterCategory('crunchy')" data-cat="crunchy" class="cat-btn btn-3d-cream px-4 py-2 rounded-full text-xs sm:text-sm font-bold">
+            🥨 Crunchy (Giòn bơ)
+          </button>
+          <button onclick="filterCategory('matcha-nut')" data-cat="matcha-nut" class="cat-btn btn-3d-cream px-4 py-2 rounded-full text-xs sm:text-sm font-bold">
+            🍵 Matcha & Hạt
+          </button>
+          <button onclick="filterCategory('gift')" data-cat="gift" class="cat-btn btn-3d-cream px-4 py-2 rounded-full text-xs sm:text-sm font-bold">
+            🎁 Hộp Quà Tặng
+          </button>
+        </div>
+
+        <!-- Search & Sorters -->
+        <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-end">
+          <!-- Search Input -->
+          <div class="relative flex-1 sm:flex-initial">
+            <input type="text" id="header-search-input" oninput="handleSearchInput(this.value)" placeholder="Tìm tên bánh quy..." class="w-full sm:w-56 px-4 py-2 pl-9 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold text-cocoa focus:outline-none focus:ring-2 focus:ring-caramel">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-xs text-cocoaLight"></i>
+            <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-2.5 text-xs text-cocoaLight hover:text-cocoa">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Low Sugar Checkbox -->
+          <label class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold text-cocoa cursor-pointer select-none">
+            <input type="checkbox" id="low-sugar-filter" onchange="renderProducts()" class="w-4 h-4 accent-cocoa rounded">
+            <span>Chỉ hiện ít ngọt</span>
+          </label>
+
+          <!-- Sorting Selector -->
+          <select id="sort-select" onchange="renderProducts()" class="px-3.5 py-2 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold text-cocoa focus:outline-none">
+            <option value="popular">Phổ biến nhất</option>
+            <option value="price-asc">Giá: Thấp đến Cao</option>
+            <option value="price-desc">Giá: Cao đến Thấp</option>
+            <option value="rating">Đánh giá cao nhất</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Active Search Status Bar -->
+      <div id="search-status-bar" class="hidden mt-4 pt-3 border-t border-cocoa/15 flex items-center justify-between text-xs font-bold text-cocoaLight">
+        <span id="search-status-text">Đang hiển thị kết quả tìm kiếm...</span>
+        <button onclick="clearSearch()" class="text-caramel underline hover:text-cocoa">Xóa tìm kiếm</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      <!-- Dynamically rendered via JavaScript -->
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 6. CUSTOM BOX BUILDER (MIX & MATCH)        -->
+  <!-- ========================================== -->
+  <section id="box-builder" class="py-16 bg-butter/30 border-y-2 border-cocoa/15 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-bold uppercase tracking-widest text-caramel bg-pastelPink px-3.5 py-1 rounded-full border border-cocoa/30 inline-block mb-3">Trải Nghiệm Độc Quyền</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-cocoa">Tự Tạo Hộp Bánh Quy (Mix & Match)</h2>
+        <p class="text-xs sm:text-sm text-cocoaLight mt-2 font-medium">Tự tay chọn lựa những chiếc bánh quy yêu thích để đóng gói vào hộp thiếc Pastel sang trọng làm quà tặng.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Box Configuration Panel -->
+        <div class="lg:col-span-5 bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 shadow-[0_8px_0_#5C3A21]">
+          <h3 class="font-serif text-xl font-bold text-cocoa mb-4 flex items-center gap-2">
+            <span>🎁</span> 1. Chọn Kích Thước Hộp Bánh
+          </h3>
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <button onclick="setBoxCapacity(4)" id="box-cap-4" class="btn-3d-cocoa py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center">
+              Hộp Nhỏ (4 Chiếc) <br/><span class="text-[10px] opacity-80">Tiết kiệm 10%</span>
+            </button>
+            <button onclick="setBoxCapacity(6)" id="box-cap-6" class="btn-3d-cream py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center">
+              Hộp Lớn (6 Chiếc) <br/><span class="text-[10px] opacity-80">Tiết kiệm 15%</span>
+            </button>
+          </div>
+
+          <h3 class="font-serif text-xl font-bold text-cocoa mb-3 flex items-center gap-2">
+            <span>🎀</span> 2. Chọn Màu Nơ Lụa & Thiệp
+          </h3>
+          <div class="space-y-3 mb-6">
+            <label class="flex items-center justify-between p-3 rounded-2xl bg-white border-2 border-cocoa cursor-pointer hover:bg-pastelPink/30 transition-colors">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="box-ribbon" value="Nơ Hồng Pastel" checked onchange="updateBoxSummary()" class="accent-cocoa">
+                <span class="text-xs font-bold text-cocoa">Nơ Hồng Pastel + Thiệp Chúc Mừng</span>
+              </div>
+              <span class="text-xs font-bold text-caramel">Miễn phí</span>
+            </label>
+            <label class="flex items-center justify-between p-3 rounded-2xl bg-white border-2 border-cocoa cursor-pointer hover:bg-butter/30 transition-colors">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="box-ribbon" value="Nơ Vàng Bơ Hoàng Gia" onchange="updateBoxSummary()" class="accent-cocoa">
+                <span class="text-xs font-bold text-cocoa">Nơ Vàng Bơ Hoàng Gia + Thiệp Nổi</span>
+              </div>
+              <span class="text-xs font-bold text-caramel">+15.000đ</span>
+            </label>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-butter border-2 border-cocoa mb-6">
+            <div class="flex items-center justify-between text-xs font-bold text-cocoa mb-1">
+              <span>Trạng thái hộp quà:</span>
+              <span id="box-status-text">0 / 4 chiếc</span>
+            </div>
+            <div class="w-full h-3 bg-white border border-cocoa rounded-full overflow-hidden">
+              <div id="box-progress-bar" class="w-0 h-full bg-caramel rounded-full transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <!-- Total & Add to Cart -->
+          <div class="flex items-center justify-between pt-4 border-t border-cocoa/15">
+            <div>
+              <div class="text-[11px] text-cocoaLight font-semibold">Tổng giá hộp quà:</div>
+              <div id="box-total-price" class="font-serif text-2xl font-bold text-cocoa">160.000đ</div>
+            </div>
+            <button onclick="addCustomBoxToCart()" id="add-box-btn" disabled class="opacity-50 cursor-not-allowed btn-3d-cocoa px-6 py-3 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2">
+              <i class="fa-solid fa-bag-shopping text-pastelPink"></i> Thêm Hộp Vào Giỏ
+            </button>
+          </div>
+        </div>
+
+        <!-- Box Slots Visualizer & Selector -->
+        <div class="lg:col-span-7 bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 shadow-[0_8px_0_#5C3A21]">
+          <h3 class="font-serif text-xl font-bold text-cocoa mb-4 flex items-center justify-between">
+            <span>🍪 3. Sắp Xếp Bánh Vào Hộp Thiếc</span>
+            <span class="text-xs text-cocoaLight font-medium">(Nhấn chọn bánh bên dưới)</span>
+          </h3>
+
+          <!-- Slots Container -->
+          <div id="box-slots-container" class="grid grid-cols-2 sm:grid-cols-3 gap-4 p-5 rounded-3xl bg-pastelPink/30 border-2 border-dashed border-cocoa mb-6 min-h-[190px] items-center justify-center">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <h4 class="font-bold text-xs uppercase text-cocoa mb-3">Danh sách bánh có sẵn để thêm vào hộp:</h4>
+          <div id="builder-catalog" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 7. STORY & QUALITY PROMISE                 -->
+  <!-- ========================================== -->
+  <section id="story" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-6 relative">
+        <div class="w-full h-80 sm:h-96 rounded-[2.5rem] bg-pastelPink border-2 border-cocoa shadow-[0_10px_0_#5C3A21] overflow-hidden relative flex items-center justify-center">
+          <div class="absolute inset-0 bg-[radial-gradient(#FFF1B5_1px,transparent_1px)] bg-[size:16px_16px] opacity-40"></div>
+          <div class="text-center p-8 relative z-10">
+            <span class="text-6xl block mb-4">👩‍🍳✨</span>
+            <h3 class="font-serif text-2xl font-bold text-cocoa">Bếp Bánh Nhỏ - Đong đầy Tình Thân</h3>
+            <p class="text-xs text-cocoaLight mt-2 font-medium max-w-sm mx-auto">Được thành lập từ niềm đam mê mang lại những chiếc bánh quy hoàn hảo nhất cho gia đình và bạn bè.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6">
+        <span class="text-xs font-bold uppercase tracking-widest text-caramel bg-butter px-3.5 py-1 rounded-full border border-cocoa/30 inline-block mb-3">Cam Kết Chất Lượng</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-cocoa">Nguyên Liệu Tự Nhiên & Quy Tắc Vàng 3 Không</h2>
+        
+        <div class="mt-8 space-y-4">
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-cream border-2 border-cocoa shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-pastelPink border-2 border-cocoa flex items-center justify-center text-base shrink-0 font-bold">1</div>
+            <div>
+              <h4 class="font-bold text-sm text-cocoa">Không chất bảo quản & Phụ gia công nghiệp</h4>
+              <p class="text-xs text-cocoaLight mt-0.5">Bánh nướng mới mỗi ngày và chỉ bán trong vòng 48 giờ để đảm bảo độ tươi ngon nguyên bản.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-cream border-2 border-cocoa shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-butter border-2 border-cocoa flex items-center justify-center text-base shrink-0 font-bold">2</div>
+            <div>
+              <h4 class="font-bold text-sm text-cocoa">Bơ Normandy & Sô-Cô-La Bỉ nguyên chất</h4>
+              <p class="text-xs text-cocoaLight mt-0.5">Chọn lọc khắt khe từ các thương hiệu nguyên liệu làm bánh hàng đầu thế giới.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-2xl bg-cream border-2 border-cocoa shadow-sm">
+            <div class="w-10 h-10 rounded-xl bg-pastelPink border-2 border-cocoa flex items-center justify-center text-base shrink-0 font-bold">3</div>
+            <div>
+              <h4 class="font-bold text-sm text-cocoa">Giảm 35% lượng đường tinh luyện</h4>
+              <p class="text-xs text-cocoaLight mt-0.5">Phù hợp cho cả người ăn kiêng, người lớn tuổi và trẻ nhỏ thưởng thức mỗi ngày.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 8. REVIEWS & TESTIMONIALS                  -->
+  <!-- ========================================== -->
+  <section id="reviews" class="py-16 bg-cream border-t-2 border-cocoa/15">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <span class="text-xs font-bold uppercase tracking-widest text-caramel bg-butter px-3.5 py-1 rounded-full border border-cocoa/30 inline-block mb-3">Khách Hàng Nói Gì</span>
+        <h2 class="font-serif text-3xl sm:text-4xl font-extrabold text-cocoa">Đánh Giá Từ Tấm Lòng Yêu Bánh</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Review 1 -->
+        <div class="bakery-card p-6 rounded-[2rem]">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-3">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-cocoa font-medium leading-relaxed">
+            "Bánh Classic Choco Lava ngon xuất sắc! Nhân sô-cô-la tan chảy ấm nóng, vị ngọt vừa phải không bị gắt cổ chút nào. Chắc chắn sẽ ủng hộ tiệm dài lâu."
+          </p>
+          <div class="mt-6 pt-4 border-t border-cocoa/10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center font-bold text-xs">HN</div>
+            <div>
+              <div class="font-bold text-xs text-cocoa">Hà Phương Ngân</div>
+              <div class="text-[10px] text-cocoaLight">Khách hàng tại Quận 1, TP.HCM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="bakery-card p-6 rounded-[2rem]">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-3">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-cocoa font-medium leading-relaxed">
+            "Mình tự tạo hộp 6 bánh làm quà sinh nhật cho bạn thân. Hộp thiếc pastel xinh xắn kèm nơ lụa cực kỳ sang trọng. Bạn mình nhận xong khen mãi không thôi!"
+          </p>
+          <div class="mt-6 pt-4 border-t border-cocoa/10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-butter border-2 border-cocoa flex items-center justify-center font-bold text-xs">MD</div>
+            <div>
+              <div class="font-bold text-xs text-cocoa">Minh Đức</div>
+              <div class="text-[10px] text-cocoaLight">Khách hàng tại Thủ Đức</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="bakery-card p-6 rounded-[2rem]">
+          <div class="flex items-center gap-1 text-amber-500 text-xs mb-3">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-cocoa font-medium leading-relaxed">
+            "Giao hàng siêu tốc trong 30 phút mà bánh vẫn còn ấm nguyên mùi bơ sữa. Dòng Matcha Macadamia thơm đậm vị trà nhật, hạt mắc-ca giòn bùi ăn cuốn vô cùng."
+          </p>
+          <div class="mt-6 pt-4 border-t border-cocoa/10 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center font-bold text-xs">TQ</div>
+            <div>
+              <div class="font-bold text-xs text-cocoa">Thanh Quỳnh</div>
+              <div class="text-[10px] text-cocoaLight">Khách hàng tại Quận 3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 9. ORDER TRACKING SECTION                  -->
+  <!-- ========================================== -->
+  <section id="track-order" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-10 shadow-[0_10px_0_#5C3A21] text-center">
+      <span class="text-3xl block mb-2">🔍📦</span>
+      <h2 class="font-serif text-2xl sm:text-3xl font-bold text-cocoa">Tra Cứu Trạng Thái Đơn Hàng</h2>
+      <p class="text-xs sm:text-sm text-cocoaLight mt-1 mb-6">Nhập Mã đơn hàng hoặc Số điện thoại để kiểm tra tiến độ nướng bánh và giao hàng.</p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+        <input type="text" id="track-input" placeholder="Nhập #SC-... hoặc SĐT của bạn" class="w-full px-4 py-3 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold text-cocoa focus:outline-none">
+        <button onclick="handleTrackOrder()" class="w-full sm:w-auto btn-3d-cocoa px-6 py-3 rounded-2xl text-xs font-bold shrink-0">
+          Tra cứu ngay
+        </button>
+      </div>
+
+      <div id="track-result-box" class="hidden mt-6 p-5 rounded-2xl bg-butter/60 border-2 border-cocoa text-left text-xs space-y-2">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
+  <!-- 10. CART SLIDE-OVER DRAWER                -->
+  <!-- ========================================== -->
+  <div id="cart-drawer" class="fixed inset-0 z-[9997] hidden pointer-events-none">
+    <!-- Backdrop -->
+    <div id="cart-backdrop" onclick="toggleCartDrawer(false)" class="absolute inset-0 bg-cocoa/40 backdrop-blur-sm opacity-0 transition-opacity pointer-events-auto"></div>
+
+    <!-- Drawer Panel -->
+    <div id="cart-panel" class="absolute top-0 right-0 bottom-0 w-full max-w-md bg-cream border-l-2 border-cocoa shadow-2xl flex flex-col translate-x-full transition-transform duration-300 pointer-events-auto">
+      <!-- Drawer Header -->
+      <div class="p-6 border-b-2 border-cocoa/15 flex items-center justify-between bg-pastelPink/40">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛒</span>
+          <h3 class="font-serif text-xl font-bold text-cocoa">Giỏ Hàng Của Bạn</h3>
+        </div>
+        <button onclick="toggleCartDrawer(false)" class="w-8 h-8 rounded-full bg-cream border-2 border-cocoa flex items-center justify-center hover:bg-pastelPink transition-colors">
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+
+      <!-- Freeship Progress Bar -->
+      <div class="p-4 bg-butter border-b border-cocoa/15">
+        <div class="flex items-center justify-between text-xs font-bold text-cocoa mb-1">
+          <span id="freeship-status-text">Mua thêm 150.000đ để được Freeship!</span>
+          <span id="freeship-percent-text">50%</span>
+        </div>
+        <div class="w-full h-2.5 bg-white border border-cocoa rounded-full overflow-hidden">
+          <div id="freeship-bar" class="w-1/2 h-full bg-caramel rounded-full transition-all duration-300"></div>
+        </div>
+      </div>
+
+      <!-- Cart Items List -->
+      <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- Dynamically rendered via JS -->
+      </div>
+
+      <!-- Drawer Footer & Checkout -->
+      <div class="p-6 border-t-2 border-cocoa/15 bg-cream space-y-3">
+        <!-- Promo Code Box -->
+        <div class="flex items-center gap-2">
+          <input type="text" id="promo-code-input" placeholder="Mã giảm giá (VD: SWEET10)" class="flex-1 px-3.5 py-2 rounded-xl bg-white border-2 border-cocoa text-xs font-bold uppercase focus:outline-none">
+          <button onclick="applyPromoCode()" class="btn-3d-butter px-4 py-2 rounded-xl text-xs font-bold">Áp dụng</button>
+        </div>
+
+        <div class="space-y-1.5 text-xs text-cocoaLight font-semibold pt-2 border-t border-cocoa/10">
+          <div class="flex justify-between">
+            <span>Tạm tính:</span>
+            <span id="cart-subtotal" class="font-bold text-cocoa">0đ</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Giảm giá:</span>
+            <span id="cart-discount" class="font-bold text-rose-600">-0đ</span>
+          </div>
+          <div class="flex justify-between">
+            <span>Phí vận chuyển:</span>
+            <span id="cart-shipping" class="font-bold text-cocoa">30.000đ</span>
+          </div>
+          <div class="flex justify-between text-sm sm:text-base font-serif font-bold text-cocoa pt-2 border-t border-cocoa/15">
+            <span>Tổng thanh toán:</span>
+            <span id="cart-total" class="text-caramel">0đ</span>
+          </div>
+        </div>
+
+        <button onclick="openCheckoutModal()" class="w-full btn-3d-cocoa py-3.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2">
+          <i class="fa-solid fa-lock text-pastelPink"></i> Tiến Hành Đặt Hàng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 11. QUICK VIEW PRODUCT MODAL               -->
+  <!-- ========================================== -->
+  <div id="product-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-xl w-full relative shadow-2xl animate-[fadeIn_0.25s_ease]">
+      <button onclick="closeProductModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <div id="modal-content-inner" class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 12. CHECKOUT MODAL                         -->
+  <!-- ========================================== -->
+  <div id="checkout-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <h3 class="font-serif text-2xl font-bold text-cocoa mb-4 flex items-center gap-2">
+        <span>🛒</span> Thông Tin Giao Hàng & Thanh Toán
+      </h3>
+
+      <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-cocoa mb-1">Họ và tên người nhận (*)</label>
+          <input type="text" id="chk-name" required placeholder="VD: Nguyễn Văn A" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cocoa mb-1">Số điện thoại liên hệ (*)</label>
+          <input type="tel" id="chk-phone" required placeholder="VD: 0901234567" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cocoa mb-1">Địa chỉ giao hàng chi tiết (*)</label>
+          <textarea id="chk-address" required rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cocoa mb-1">Ghi chú cho tiệm bánh</label>
+          <input type="text" id="chk-note" placeholder="VD: Giao giờ hành chính, gọi trước khi tới..." class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-cocoa mb-1">Phương thức thanh toán</label>
+          <select id="chk-payment" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+            <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+            <option value="transfer">Chuyển khoản QR Ngân hàng (VietQR)</option>
+            <option value="momo">Ví MoMo / ZaloPay</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full btn-3d-cocoa py-3.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 mt-2">
+          <i class="fa-solid fa-check text-pastelPink"></i> Xác Nhận Đặt Đơn Ngay
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 13. AUTH & ADMIN MODAL                     -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
+      <button onclick="closeAuthModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <!-- Auth Form View (Login / Register) -->
+      <div id="auth-form-view">
+        <div class="text-center mb-6">
+          <span class="text-4xl block mb-2">🍪👑</span>
+          <h3 class="font-serif text-2xl font-bold text-cocoa">Tài Khoản Sweet Crumb</h3>
+          <p class="text-xs text-cocoaLight mt-1">Đăng nhập để quản trị hệ thống hoặc lưu đơn hàng dễ dàng.</p>
+        </div>
+
+        <!-- Quick Tabs -->
+        <div class="flex p-1 bg-white border-2 border-cocoa rounded-2xl mb-6">
+          <button onclick="switchAuthTab('login')" id="tab-login-btn" class="flex-1 py-2 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all">Đăng Nhập</button>
+          <button onclick="switchAuthTab('register')" id="tab-register-btn" class="flex-1 py-2 rounded-xl text-xs font-bold text-cocoaLight transition-all">Đăng Ký</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-cocoa mb-1">Email / Tài khoản</label>
+            <input type="email" id="login-email" required placeholder="khachhang@gmail.com" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-cocoa mb-1">Mật khẩu</label>
+            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+          </div>
+
+          <button type="submit" class="w-full btn-3d-cocoa py-3 rounded-2xl text-xs font-bold">Đăng Nhập Ngay</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+          <div>
+            <label class="block text-xs font-bold text-cocoa mb-1">Họ và tên</label>
+            <input type="text" id="reg-name" required placeholder="Nguyễn Văn A" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-cocoa mb-1">Email</label>
+            <input type="email" id="reg-email" required placeholder="ban@gmail.com" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-cocoa mb-1">Mật khẩu</label>
+            <input type="password" id="reg-password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-2xl bg-white border-2 border-cocoa text-xs font-bold focus:outline-none">
+          </div>
+          <button type="submit" class="w-full btn-3d-pink py-3 rounded-2xl text-xs font-bold">Đăng Ký Tài Khoản</button>
+        </form>
+      </div>
+
+      <!-- Logged-in Profile View -->
+      <div id="auth-profile-view" class="hidden text-center space-y-4">
+        <div class="w-20 h-20 mx-auto rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center text-3xl shadow-md" id="profile-avatar-icon">👑</div>
+        <div>
+          <h3 id="profile-name" class="font-serif text-xl font-bold text-cocoa">Quản Trị Viên</h3>
+          <p id="profile-email" class="text-xs text-cocoaLight">admin@sweetcrumb.vn</p>
+        </div>
+        <div>
+          <span id="profile-role-badge" class="px-3 py-1 rounded-full bg-pastelPink border-2 border-cocoa text-xs font-extrabold uppercase">Quản Trị Viên (Admin)</span>
+        </div>
+
+        <!-- Admin Shortcuts Box -->
+        <div id="admin-shortcuts-box" class="p-4 rounded-2xl bg-butter border-2 border-cocoa text-left space-y-2">
+          <h4 class="font-bold text-xs text-cocoa uppercase flex items-center gap-1.5"><i class="fa-solid fa-crown text-amber-700"></i> Mục Quản Trị Độc Quyền:</h4>
+          <ul class="text-xs space-y-1.5 font-semibold text-cocoaLight">
+            <li>• Thêm sản phẩm bánh quy mới & Xóa sản phẩm</li>
+            <li>• Quản lý & Thay ảnh sản phẩm bánh quy</li>
+            <li>• Kết nối & Kiểm tra Firebase Database (`cake-69ea2`)</li>
+            <li>• Xem danh sách đơn hàng real-time từ khách hàng</li>
+          </ul>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="closeAuthModal(); openAddProductModal();" class="btn-3d-pink py-2 rounded-xl text-xs font-bold">+ Thêm Sản Phẩm</button>
+            <button onclick="openAdminModal(); closeAuthModal();" class="btn-3d-cocoa py-2 rounded-xl text-xs font-bold">Bảng Quản Trị</button>
+          </div>
+        </div>
+
+        <button onclick="handleLogout()" class="w-full btn-3d-cream py-2.5 rounded-2xl text-xs font-bold text-rose-600">Đăng Xuất Tài Khoản</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 14. ADMIN DASHBOARD MODAL (FIREBASE)       -->
+  <!-- ========================================== -->
+  <div id="admin-dashboard-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-3xl w-full relative shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="closeAdminModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-3xl">👑</span>
+        <div>
+          <h3 class="font-serif text-2xl font-bold text-cocoa">Bảng Điều Khiển Quản Trị (Admin Dashboard)</h3>
+          <p class="text-xs text-cocoaLight">Kết nối Firebase Database <code class="bg-butter px-1.5 py-0.5 rounded border border-cocoa font-mono">cake-69ea2</code> và quản lý sản phẩm.</p>
+        </div>
+      </div>
+
+      <!-- Tabs inside Admin Modal -->
+      <div class="flex p-1 bg-white border-2 border-cocoa rounded-2xl mb-6">
+        <button onclick="switchAdminTab('firebase')" id="adm-tab-firebase" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all">🟢 Trạng Thái Firebase</button>
+        <button onclick="switchAdminTab('products')" id="adm-tab-products" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-cocoaLight transition-all">🍪 Quản Lý Sản Phẩm</button>
+        <button onclick="switchAdminTab('orders')" id="adm-tab-orders" class="flex-1 py-2.5 rounded-xl text-xs font-bold text-cocoaLight transition-all">📦 Danh Sách Đơn Hàng</button>
+      </div>
+
+      <!-- Tab Content: Firebase -->
+      <div id="adm-content-firebase" class="space-y-4 text-xs">
+        <div class="p-4 rounded-2xl bg-butter/50 border-2 border-cocoa">
+          <h4 class="font-bold text-sm text-cocoa mb-2 flex items-center gap-2">
+            <span>🔌</span> Cấu hình Firebase SDK đã kết nối:
+          </h4>
+          <pre class="bg-white p-3 rounded-xl border border-cocoa font-mono text-[11px] overflow-x-auto text-cocoaLight">
+Project ID: cake-69ea2
+Auth Domain: cake-69ea2.firebaseapp.com
+Storage Bucket: cake-69ea2.firebasestorage.app
+Measurement ID: G-410ZZX6XQD
+          </pre>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-cream border-2 border-cocoa space-y-3">
+          <h4 class="font-bold text-sm text-cocoa">Kiểm tra kết nối & Đồng bộ Cloud Firestore:</h4>
+          <div class="flex flex-wrap items-center gap-3">
+            <button onclick="testFirebasePing()" class="btn-3d-cocoa px-4 py-2 rounded-xl text-xs font-bold">Kiểm tra Ping Firebase</button>
+            <button onclick="syncAllProductsToCloud()" class="btn-3d-pink px-4 py-2 rounded-xl text-xs font-bold">Đồng bộ toàn bộ Menu lên Cloud</button>
+          </div>
+          <div id="firebase-ping-result" class="p-3 rounded-xl bg-white border border-cocoa font-mono text-[11px] text-cocoa">
+            Trạng thái kết nối: Sẵn sàng (Ready)
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content: Products Image Management -->
+      <div id="adm-content-products" class="hidden space-y-4">
+        <div class="p-4 rounded-2xl bg-butter/50 border-2 border-cocoa flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h4 class="font-bold text-xs text-cocoa uppercase">Thêm mới hoặc cập nhật hình ảnh sản phẩm</h4>
+            <p class="text-[11px] text-cocoaLight">Thêm món bánh mới vào menu hoặc thay ảnh hàng loạt.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openAddProductModal()" class="btn-3d-pink px-4 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-plus"></i> Thêm sản phẩm mới
+            </button>
+            <label class="btn-3d-cocoa px-4 py-2 rounded-xl text-xs font-bold cursor-pointer inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-camera"></i> Thay toàn bộ ảnh
+              <input type="file" accept="image/*" class="hidden" onchange="handleBulkImageUpload(event)">
+            </label>
+          </div>
+        </div>
+
+        <!-- Product List with Individual Image Changer -->
+        <div id="admin-product-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Tab Content: Orders -->
+      <div id="adm-content-orders" class="hidden space-y-3">
+        <h4 class="font-bold text-xs text-cocoa uppercase">Danh sách đơn hàng mới nhất:</h4>
+        <div id="admin-orders-list" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 14B. ADD NEW PRODUCT MODAL (ADMIN ONLY)    -->
+  <!-- ========================================== -->
+  <div id="add-product-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-xl w-full relative shadow-2xl max-h-[92vh] overflow-y-auto">
+      <button onclick="closeAddProductModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-11 h-11 rounded-2xl bg-pastelPink border-2 border-cocoa flex items-center justify-center text-xl shadow-sm">
+          🍪
+        </div>
+        <div>
+          <h3 class="font-serif text-2xl font-bold text-cocoa">Thêm Sản Phẩm Bánh Mới</h3>
+          <p class="text-xs text-cocoaLight">Sản phẩm mới sẽ hiển thị ngay trên Thực đơn và Hộp quà tự chọn.</p>
+        </div>
+      </div>
+
+      <form id="add-product-form" onsubmit="handleAddProductSubmit(event)" class="space-y-4 text-xs">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Tên bánh quy (*)</label>
+            <input type="text" id="new-prod-name" required placeholder="VD: Pistachio Raspberry Melt" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Danh mục (*)</label>
+            <select id="new-prod-category" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+              <option value="soft">🍪 Soft Cookies (Mềm)</option>
+              <option value="crunchy">🥨 Crunchy (Giòn bơ)</option>
+              <option value="matcha-nut">🍵 Matcha & Hạt</option>
+              <option value="gift">🎁 Hộp Quà Tặng</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Giá bán (VNĐ) (*)</label>
+            <input type="number" id="new-prod-price" required min="1000" step="1000" value="45000" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Giá gốc (VNĐ)</label>
+            <input type="number" id="new-prod-oldprice" min="1000" step="1000" value="52000" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Nhãn nổi bật (Tag)</label>
+            <input type="text" id="new-prod-tag" placeholder="VD: Mới ra lò" value="Mới ra lò" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Năng lượng (kcal)</label>
+            <input type="number" id="new-prod-calories" value="275" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+          <div>
+            <label class="block font-bold text-cocoa mb-1">Quy trình chuẩn bị</label>
+            <input type="text" id="new-prod-prep" value="Nướng mới mỗi sáng" class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+          </div>
+          <div class="pt-4">
+            <label class="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-butter/60 border-2 border-cocoa font-bold text-cocoa cursor-pointer select-none">
+              <input type="checkbox" id="new-prod-lowsugar" checked class="w-4 h-4 accent-cocoa rounded">
+              <span>Dòng bánh Ít ngọt</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-cocoa mb-1">Mô tả ngắn (hiển thị trên thẻ bánh) (*)</label>
+          <input type="text" id="new-prod-shortdesc" required placeholder="VD: Bánh quy bơ Pháp nhân kem hạt dẻ cười và mứt phúc bồn tử." class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-bold text-cocoa mb-1">Mô tả chi tiết sản phẩm</label>
+          <textarea id="new-prod-desc" rows="2" placeholder="Mô tả chi tiết hương vị, nguyên liệu khi khách bấm xem nhanh..." class="w-full px-3.5 py-2.5 rounded-2xl bg-white border-2 border-cocoa font-bold focus:outline-none"></textarea>
+        </div>
+
+        <!-- Product Image Upload & Preview -->
+        <div class="p-4 rounded-2xl bg-butter/40 border-2 border-dashed border-cocoa flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <img id="new-prod-img-preview" src="Procrastination does not merely steal today's time (6).jpg" alt="Preview" class="w-16 h-16 rounded-2xl object-contain bg-cream border-2 border-cocoa p-1" onerror="this.src='https://placehold.co/120x120/5C3A21/FFFDF7?text=Cookie'">
+            <div>
+              <div class="font-bold text-cocoa">Hình ảnh sản phẩm</div>
+              <p class="text-[11px] text-cocoaLight">Tải ảnh từ máy tính hoặc giữ ảnh bánh mặc định của tiệm.</p>
+            </div>
+          </div>
+          <label class="btn-3d-butter px-4 py-2 rounded-xl text-xs font-bold cursor-pointer shrink-0 inline-flex items-center gap-1.5">
+            <i class="fa-solid fa-upload"></i> Chọn ảnh bánh
+            <input type="file" id="new-prod-img-input" accept="image/*" class="hidden" onchange="handleNewProductImagePreview(event)">
+          </label>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeAddProductModal()" class="btn-3d-cream px-5 py-2.5 rounded-2xl text-xs font-bold">Hủy</button>
+          <button type="submit" class="btn-3d-cocoa px-6 py-2.5 rounded-2xl text-xs font-bold flex items-center gap-2">
+            <i class="fa-solid fa-check text-pastelPink"></i> Lưu & Đăng Sản Phẩm
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 15. WISHLIST MODAL                         -->
+  <!-- ========================================== -->
+  <div id="wishlist-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-cocoa/50 backdrop-blur-sm">
+    <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 max-w-lg w-full relative shadow-2xl max-h-[90vh] overflow-y-auto">
+      <button onclick="closeWishlistModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-pastelPink border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors">
+        <i class="fa-solid fa-xmark text-xs"></i>
+      </button>
+
+      <h3 class="font-serif text-2xl font-bold text-cocoa mb-4 flex items-center gap-2">
+        <span>❤️</span> Sản Phẩm Yêu Thích Của Bạn
+      </h3>
+      <div id="wishlist-items-container" class="space-y-3">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- 16. FOOTER                                 -->
+  <!-- ========================================== -->
+  <footer class="bg-cocoa text-cream pt-16 pb-12 mt-auto border-t-4 border-pastelPink">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+        <div class="lg:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-2xl bg-white border-2 border-cream flex items-center justify-center overflow-hidden p-1">
+              <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
+            </div>
+            <span class="font-serif text-2xl font-bold text-cream">Sweet Cake</span>
+          </div>
+          <p class="text-xs text-cream/80 leading-relaxed max-w-sm">
+            Tiệm bánh ngọt và bánh quy thủ công mang lại sự ấm áp và ngọt ngào qua từng mẻ bánh nướng mới mỗi ngày. Tận tâm trong từng nguyên liệu, trọn vẹn trong từng hương vị.
+          </p>
+          <div class="mt-6 flex items-center gap-3">
+            <a href="#" class="w-9 h-9 rounded-full bg-cream/10 border border-cream/30 flex items-center justify-center hover:bg-pastelPink hover:text-cocoa transition-colors"><i class="fa-brands fa-facebook-f text-xs"></i></a>
+            <a href="#" class="w-9 h-9 rounded-full bg-cream/10 border border-cream/30 flex items-center justify-center hover:bg-pastelPink hover:text-cocoa transition-colors"><i class="fa-brands fa-instagram text-xs"></i></a>
+            <a href="#" class="w-9 h-9 rounded-full bg-cream/10 border border-cream/30 flex items-center justify-center hover:bg-pastelPink hover:text-cocoa transition-colors"><i class="fa-brands fa-tiktok text-xs"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-serif font-bold text-sm text-butter mb-4 uppercase tracking-wider">Khám Phá Menu</h4>
+          <ul class="space-y-2.5 text-xs text-cream/80 font-medium">
+            <li><a href="#catalog" class="hover:text-butter transition-colors">Soft Cookies (Bánh mềm)</a></li>
+            <li><a href="#catalog" class="hover:text-butter transition-colors">Crunchy Cookies (Giòn bơ)</a></li>
+            <li><a href="#catalog" class="hover:text-butter transition-colors">Matcha & Hạt cao cấp</a></li>
+            <li><a href="#box-builder" class="hover:text-butter transition-colors">Hộp Quà Thiếc Mix & Match</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif font-bold text-sm text-butter mb-4 uppercase tracking-wider">Hỗ Trợ Khách Hàng</h4>
+          <ul class="space-y-2.5 text-xs text-cream/80 font-medium">
+            <li><a href="#track-order" class="hover:text-butter transition-colors">Tra cứu tiến độ đơn hàng</a></li>
+            <li><a href="#" class="hover:text-butter transition-colors">Chính sách giao hàng hỏa tốc</a></li>
+            <li><a href="#" class="hover:text-butter transition-colors">Chính sách đổi trả & hoàn tiền</a></li>
+            <li><a href="#" class="hover:text-butter transition-colors">Hướng dẫn bảo quản bánh</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-serif font-bold text-sm text-butter mb-4 uppercase tracking-wider">Tiệm Bánh & Liên Hệ</h4>
+          <ul class="space-y-2.5 text-xs text-cream/80 font-medium">
+            <li>📍 123 Nguyễn Huệ, Quận 1, TP.HCM</li>
+            <li>📞 Hotline: 1900 6868 (8:00 - 21:00)</li>
+            <li>✉️ hello@sweetcrumb.vn</li>
+            <li>🟢 Firebase: cake-69ea2 Connected</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-8 border-t border-cream/15 flex flex-col sm:flex-row items-center justify-between text-xs text-cream/60">
+        <p>&copy; 2026 Sweet Cake Bakery. All rights reserved.</p>
+        <p class="mt-2 sm:mt-0 font-medium">Thiết kế bởi Đội ngũ Sweet Cake x Firebase</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- 17. FIREBASE & APP LOGIC SCRIPT            -->
+  <!-- ========================================== -->
+  <script>
+    // ============================================================================
+    // ★ FIREBASE SDK INITIALIZATION (cake-69ea2) ★
+    // ----------------------------------------------------------------------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyAe2LwdVofS97DrdmkGMGhGMhUKnjV3ua0",
+      authDomain: "cake-69ea2.firebaseapp.com",
+      projectId: "cake-69ea2",
+      storageBucket: "cake-69ea2.firebasestorage.app",
+      messagingSenderId: "646518842724",
+      appId: "1:646518842724:web:58f1571355c98e092b0671",
+      measurementId: "G-410ZZX6XQD"
+    };
+
+    // Global variable definitions to prevent re-declaration errors
+    if (typeof window.DEFAULT_PRODUCT_IMAGE === 'undefined') {
+      window.DEFAULT_PRODUCT_IMAGE = "Procrastination does not merely steal today's time (6).jpg";
+      window.AUTO_REMOVE_BLACK_BG = true;
+      window.PRODUCT_IMAGES_CONFIG = {
+        c1: window.DEFAULT_PRODUCT_IMAGE,
+        c2: window.DEFAULT_PRODUCT_IMAGE,
+        c3: window.DEFAULT_PRODUCT_IMAGE,
+        c4: window.DEFAULT_PRODUCT_IMAGE,
+        c5: window.DEFAULT_PRODUCT_IMAGE,
+        c6: window.DEFAULT_PRODUCT_IMAGE,
+        c7: window.DEFAULT_PRODUCT_IMAGE,
+        c8: window.DEFAULT_PRODUCT_IMAGE,
+        c9: window.DEFAULT_PRODUCT_IMAGE
+      };
+    }
+    const DEFAULT_PRODUCT_IMAGE = window.DEFAULT_PRODUCT_IMAGE;
+    const AUTO_REMOVE_BLACK_BG = window.AUTO_REMOVE_BLACK_BG;
+    const PRODUCT_IMAGES_CONFIG = window.PRODUCT_IMAGES_CONFIG;
+
+    const processedImageCache = {};
+
+    function processBlackBgImage(imgElement) {
+      if (!AUTO_REMOVE_BLACK_BG || imgElement.dataset.processed === 'true') return;
+      const srcKey = imgElement.src;
+      if (processedImageCache[srcKey]) {
+        imgElement.dataset.processed = 'true';
+        imgElement.src = processedImageCache[srcKey];
+        return;
+      }
+      try {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const w = imgElement.naturalWidth || 400;
+        const h = imgElement.naturalHeight || 400;
+        canvas.width = w;
+        canvas.height = h;
+        ctx.drawImage(imgElement, 0, 0, w, h);
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i], g = data[i + 1], b = data[i + 2];
+          if (r < 26 && g < 24 && b < 24) {
+            data[i + 3] = 0;
+          } else if (r < 45 && g < 38 && b < 38) {
+            data[i + 3] = Math.min(data[i + 3], (r + g + b) * 2);
+          }
+        }
+        ctx.putImageData(imgData, 0, 0);
+        const processedUrl = canvas.toDataURL('image/webp', 0.85);
+        processedImageCache[srcKey] = processedUrl;
+        imgElement.dataset.processed = 'true';
+        imgElement.src = processedUrl;
+      } catch (e) {
+        // Fallback for CORS
+      }
+    }
+
+    // Product Database & Visual Helper
+    const PRODUCTS = [
+      { id: 'c1', name: 'Classic Choco Lava', category: 'soft', categoryLabel: 'Soft Cookies (Mềm)', price: 42000, oldPrice: 48000, rating: 4.9, reviews: 142, tag: 'Ít ngọt', badge: 'Bán chạy', shortDesc: 'Bánh quy mềm nhân sô-cô-la đen tan chảy rắc muối biển hồng.', description: 'Sử dụng bơ Normandy cao cấp kết hợp sô-cô-la Bỉ 70% nguyên chất, nhân chảy ấm nóng khi cắn.', lowSugar: true, calories: 280, prep: 'Nướng mới mẻ' },
+      { id: 'c2', name: 'Strawberry Cream Melt', category: 'soft', categoryLabel: 'Soft Cookies (Mềm)', price: 45000, oldPrice: 52000, rating: 4.8, reviews: 98, tag: 'Mới ra lò', badge: 'Mới', shortDesc: 'Bánh quy nhân phô mai kem tươi và mứt dâu tây sên thủ công.', description: 'Sự hòa quyện giữa vị chua dịu của dâu tây tươi và kem phô mai béo ngậy tan chảy trên đầu lưỡi.', lowSugar: false, calories: 295, prep: 'Sên mứt mỗi sáng' },
+      { id: 'c3', name: 'Uji Matcha Macadamia', category: 'matcha-nut', categoryLabel: 'Matcha & Hạt', price: 48000, oldPrice: 55000, rating: 4.9, reviews: 128, tag: 'Ít ngọt', badge: 'Hảo hạng', shortDesc: 'Matcha Uji Nhật Bản đậm đà kết hợp hạt mắc-ca Úc giòn bùi.', description: 'Vị trà xanh thanh đắng nhẹ nhàng quyện cùng bơ lạt và hạt mắc-ca rang thơm lừng.', lowSugar: true, calories: 265, prep: 'Matcha nguyên bản' },
+      { id: 'c4', name: 'French Butter Shortbread', category: 'crunchy', categoryLabel: 'Crunchy (Giòn bơ)', price: 38000, oldPrice: 45000, rating: 4.8, reviews: 98, tag: 'Ít ngọt', badge: 'Truyền thống', shortDesc: 'Bánh quy bơ Pháp cổ điển giòn tan, thơm nồng hương vani Madagascar.', description: 'Công thức truyền thống từ vùng Brittany, giữ trọn vị thơm ngậy đặc trưng của bơ tươi.', lowSugar: true, calories: 240, prep: 'Nướng giòn 2 lửa' },
+      { id: 'c5', name: "Campfire S'mores", category: 'soft', categoryLabel: 'Soft Cookies (Mềm)', price: 46000, oldPrice: 52000, rating: 4.7, reviews: 84, tag: 'Bán chạy', badge: 'Hot', shortDesc: 'Kẹo dẻo marshmallow kéo sợi nướng lửa hồng quyện sô-cô-la.', description: 'Trải nghiệm hương vị cắm trại ấm áp với marshmallow dẻo quánh thơm phức.', lowSugar: false, calories: 310, prep: 'Đốt lửa thủ công' },
+      { id: 'c6', name: 'Red Velvet Cream Cheese', category: 'soft', categoryLabel: 'Soft Cookies (Mềm)', price: 47000, oldPrice: 54000, rating: 4.9, reviews: 112, tag: 'Đặc biệt', badge: 'Signatures', shortDesc: 'Bánh nhung đỏ rực rỡ nhân phô mai kem chua ngọt mịn màng.', description: 'S sắc đỏ quyến rũ từ bột cacao tự nhiên và lớp nhân cream cheese đậm đà.', lowSugar: false, calories: 290, prep: 'Ủ lạnh 24h' },
+      { id: 'c7', name: 'Earl Grey Lemon Glaze', category: 'crunchy', categoryLabel: 'Crunchy (Giòn bơ)', price: 40000, oldPrice: 46000, rating: 4.9, reviews: 128, tag: 'Ít ngọt', badge: 'Thanh mát', shortDesc: 'Bánh quy trà bá tước Anh Quốc phủ lớp sốt chanh vàng thanh mát.', description: 'Hương thơm đặc trưng của trà Earl Grey phảng phất chút vị chua thanh của chanh vàng.', lowSugar: true, calories: 250, prep: 'Ngâm trà tươi' },
+      { id: 'c8', name: 'Roasted Almond Caramel', category: 'matcha-nut', categoryLabel: 'Matcha & Hạt', price: 44000, oldPrice: 50000, rating: 4.8, reviews: 89, tag: 'Hạt cao cấp', badge: 'Giòn rụm', shortDesc: 'Hạnh nhân lát nướng bơ giòn rụm quyện sốt caramel muối biển.', description: 'Hạnh nhân tẩm caramel giòn tan kết hợp chút muối biển đậm đà khó cưỡng.', lowSugar: false, calories: 300, prep: 'Caramel nấu tay' },
+      { id: 'c9', name: 'Hộp Thiếc Pastel Signature', category: 'gift', categoryLabel: 'Hộp Quà Tặng', price: 285000, oldPrice: 320000, rating: 5.0, reviews: 215, tag: 'Quà tặng', badge: 'Best Gift', shortDesc: 'Hộp thiếc 8 vị bánh quy cao cấp kèm nơ lụa và thiệp thủ công.', description: 'Món quà hoàn hảo để biếu tặng người thương trong những dịp đặc biệt.', lowSugar: true, calories: 1800, prep: 'Đóng gói thủ công' }
+    ];
+
+    const HERO_FEATURED = [
+      { id: 'c1', name: 'Classic Choco Lava', desc: 'Bánh quy mềm nhân sô-cô-la đen tan chảy rắc muối biển hồng', price: '42.000đ', bg: 'from-amber-900 to-amber-950' },
+      { id: 'c2', name: 'Strawberry Cream Melt', desc: 'Bánh quy nhân phô mai kem tươi và mứt dâu tây sên thủ công', price: '45.000đ', bg: 'from-rose-400 to-rose-600' },
+      { id: 'c3', name: 'Uji Matcha Macadamia', desc: 'Matcha Uji Nhật Bản đậm đà kết hợp hạt mắc-ca Úc giòn bùi', price: '48.000đ', bg: 'from-emerald-600 to-teal-800' }
+    ];
+
+    function isStrictAdmin() {
+      return Boolean(
+        typeof currentUser !== 'undefined' &&
+        currentUser &&
+        currentUser.role === 'admin' &&
+        currentUser.email === 'admin@sweetcrumb.vn'
+      );
+    }
+
+    function getProductVisualHTML(prod, sizeClasses = "w-36 h-36") {
+      const imgUrl = PRODUCT_IMAGES_CONFIG[prod.id] || DEFAULT_PRODUCT_IMAGE;
+      const adminCameraBtn = isStrictAdmin() ? `
+        <button onclick="event.stopPropagation(); openSpecificImageUpload('${prod.id}')" class="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-cream/95 border border-cocoa text-[10px] font-extrabold flex items-center justify-center hover:bg-butter transition-colors shadow-sm z-10 cursor-pointer" title="Thay ảnh bánh này">
+          <i class="fa-solid fa-camera text-cocoa"></i>
+        </button>
+      ` : '';
+
+      return `
+        <div class="relative ${sizeClasses} mx-auto flex items-center justify-center group overflow-hidden rounded-2xl">
+          <img src="${imgUrl}" alt="${prod.name}" class="w-full h-full object-contain drop-shadow-md transition-transform duration-300 group-hover:scale-110" crossorigin="anonymous" onload="processBlackBgImage(this)" onerror="this.src='https://placehold.co/400x400/5C3A21/FFFDF7?text=Sweet+Crumb'" />
+          ${adminCameraBtn}
+        </div>
+      `;
+    }
+
+    function openSpecificImageUpload(prodId) {
+      if (!isStrictAdmin()) {
+        return;
+      }
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.onchange = (e) => handleBulkImageUpload(e, prodId);
+      input.click();
+    }
+    window.openSpecificImageUpload = openSpecificImageUpload;
+
+    function handleBulkImageUpload(event, specificProductId = null) {
+      if (!isStrictAdmin()) {
+        return;
+      }
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const base64Img = e.target.result;
+        if (specificProductId) {
+          PRODUCT_IMAGES_CONFIG[specificProductId] = base64Img;
+          processedImageCache[base64Img] = base64Img;
+          showToast(`Đã thay ảnh thành công cho sản phẩm ${specificProductId}!`);
+        } else {
+          for (const key of Object.keys(PRODUCT_IMAGES_CONFIG)) {
+            PRODUCT_IMAGES_CONFIG[key] = base64Img;
+          }
+          processedImageCache[base64Img] = base64Img;
+          showToast('Đã thay ảnh toàn bộ sản phẩm bằng ảnh bạn chọn!');
+        }
+        switchHeroCookie(currentHeroIdx);
+        renderProducts();
+        renderBoxBuilder();
+        renderAdminLists();
+        playPopSound(720);
+      };
+      reader.readAsDataURL(file);
+    }
+    window.handleBulkImageUpload = handleBulkImageUpload;
+
+    // Cart & Wishlist & Box Builder State
+    let cart = [];
+    let wishlist = ['c1', 'c3'];
+    let appliedPromo = null;
+    let boxCapacity = 4;
+    let customBoxItems = [];
+
+    // Audio helper for satisfying pop sounds
+    function playPopSound(freq = 600) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {
+        // AudioContext prevented by autoplay policy
+      }
+    }
+
+    // Crumb particle explosion
+    function spawnCrumbParticles(x, y) {
+      const emojis = ['🍪', '✨', '🌾', '🍫'];
+      for (let i = 0; i < 7; i++) {
+        const p = document.createElement('div');
+        p.className = 'crumb-particle text-sm';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const tx = (Math.random() - 0.5) * 160;
+        const ty = -60 - Math.random() * 90;
+        const rot = (Math.random() - 0.5) * 360;
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        p.style.setProperty('--tx', `${tx}px`);
+        p.style.setProperty('--ty', `${ty}px`);
+        p.style.setProperty('--rot', `${rot}deg`);
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 850);
+      }
+    }
+
+    // Hero Switcher
+    let currentHeroIdx = 0;
+    function switchHeroCookie(idx) {
+      currentHeroIdx = idx;
+      const item = HERO_FEATURED[idx];
+      const prodObj = PRODUCTS.find(p => p.id === item.id) || PRODUCTS[0];
+      document.getElementById('hero-cookie-svg').innerHTML = getProductVisualHTML(prodObj, "w-52 h-52");
+      document.getElementById('hero-cookie-name').textContent = item.name;
+      document.getElementById('hero-cookie-desc').textContent = item.desc;
+      document.getElementById('hero-cookie-price').textContent = item.price;
+
+      const dots = document.querySelectorAll('.hero-dot');
+      dots.forEach((d, i) => {
+        if (i === idx) {
+          d.className = 'hero-dot w-7 h-7 rounded-full border-2 border-cocoa ring-2 ring-offset-2 ring-cocoa transition-all ' + (i===0?'bg-[#7A4B2A]':i===1?'bg-[#FAD2E1]':'bg-[#A3C585]');
+        } else {
+          d.className = 'hero-dot w-7 h-7 rounded-full border-2 border-cocoa transition-all opacity-60 ' + (i===0?'bg-[#7A4B2A]':i===1?'bg-[#FAD2E1]':'bg-[#A3C585]');
+        }
+      });
+      playPopSound(600);
+    }
+    window.switchHeroCookie = switchHeroCookie;
+
+    function quickAddHeroCookie(event) {
+      const item = HERO_FEATURED[currentHeroIdx];
+      const prod = PRODUCTS.find(p => p.id === item.id) || PRODUCTS[0];
+      addToCart({
+        id: prod.id,
+        name: prod.name,
+        price: prod.price,
+        size: 'Tiêu chuẩn (110g)',
+        sweetness: '100% Vị chuẩn',
+        imgUrl: PRODUCT_IMAGES_CONFIG[prod.id] || DEFAULT_PRODUCT_IMAGE
+      });
+      spawnCrumbParticles(event.clientX, event.clientY);
+      playPopSound(800);
+      showToast(`Đã thêm nhanh ${prod.name} vào giỏ hàng!`);
+    }
+    window.quickAddHeroCookie = quickAddHeroCookie;
+
+    // Filter & Search
+    let currentCategory = 'all';
+    let searchQuery = '';
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = 'cat-btn btn-3d-cocoa px-4 py-2 rounded-full text-xs sm:text-sm font-bold';
+        } else {
+          btn.className = 'cat-btn btn-3d-cream px-4 py-2 rounded-full text-xs sm:text-sm font-bold';
+        }
+      });
+      renderProducts();
+      playPopSound(500);
+    }
+    window.filterCategory = filterCategory;
+
+    function handleSearchInput(val) {
+      searchQuery = val.trim().toLowerCase();
+      const clearBtn = document.getElementById('clear-search-btn');
+      const statusBar = document.getElementById('search-status-bar');
+      const statusText = document.getElementById('search-status-text');
+
+      if (searchQuery.length > 0) {
+        if (clearBtn) clearBtn.classList.remove('hidden');
+        if (statusBar) statusBar.classList.remove('hidden');
+        if (statusText) statusText.textContent = `Kết quả tìm kiếm cho: "${val}"`;
+      } else {
+        if (clearBtn) clearBtn.classList.add('hidden');
+        if (statusBar) statusBar.classList.add('hidden');
+      }
+      renderProducts();
+    }
+    window.handleSearchInput = handleSearchInput;
+
+    function clearSearch() {
+      searchQuery = '';
+      const s1 = document.getElementById('header-search-input');
+      if (s1) s1.value = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      document.getElementById('search-status-bar').classList.add('hidden');
+      renderProducts();
+      playPopSound(450);
+    }
+    window.clearSearch = clearSearch;
+
+    function updateCategoryAllCount() {
+      const allBtn = document.querySelector('.cat-btn[data-cat="all"]');
+      if (allBtn) {
+        allBtn.textContent = `Tất cả (${PRODUCTS.length})`;
+      }
+    }
+
+    function renderProducts() {
+      updateCategoryAllCount();
+      const grid = document.getElementById('product-grid');
+      if (!grid) return;
+
+      const lowSugarOnly = document.getElementById('low-sugar-filter').checked;
+      const sortBy = document.getElementById('sort-select').value;
+
+      let filtered = PRODUCTS.filter(p => {
+        const matchCat = (currentCategory === 'all' || p.category === currentCategory);
+        const matchLowSugar = (!lowSugarOnly || p.lowSugar);
+        const matchSearch = (searchQuery === '' || p.name.toLowerCase().includes(searchQuery) || p.shortDesc.toLowerCase().includes(searchQuery));
+        return matchCat && matchLowSugar && matchSearch;
+      });
+
+      if (sortBy === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+      else if (sortBy === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+      else if (sortBy === 'rating') filtered.sort((a,b) => b.rating - a.rating);
+      else filtered.sort((a,b) => b.reviews - a.reviews);
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center bg-cream rounded-3xl border-2 border-dashed border-cocoa/30">
+            <div class="text-4xl mb-2">🍪🔍</div>
+            <h3 class="font-serif text-xl font-bold text-cocoa">Không tìm thấy chiếc bánh nào phù hợp</h3>
+            <p class="text-xs text-cocoaLight mt-1">Hãy thử tìm từ khóa khác hoặc bỏ lọc ít ngọt nhé!</p>
+            <button onclick="clearSearch(); filterCategory('all'); document.getElementById('low-sugar-filter').checked=false; renderProducts();" class="btn-3d-pink mt-4 px-5 py-2 rounded-full text-xs font-bold">
+              Xem toàn bộ menu
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const isFav = wishlist.includes(p.id);
+        const formatPrice = new Intl.NumberFormat('vi-VN').format(p.price) + 'đ';
+        const formatOld = new Intl.NumberFormat('vi-VN').format(p.oldPrice) + 'đ';
+
+        return `
+          <div class="bakery-card rounded-[2rem] p-5 sm:p-6 relative group">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-1.5">
+                <span class="px-2.5 py-1 rounded-full bg-pastelPink border border-cocoa text-[11px] font-extrabold uppercase">
+                  ${p.tag}
+                </span>
+                ${p.lowSugar ? '<span class="px-2.5 py-1 rounded-full bg-butter border border-cocoa text-[11px] font-extrabold">Ít ngọt</span>' : ''}
+              </div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="openProductModal('${p.id}')" class="w-9 h-9 rounded-full bg-cream border-2 border-cocoa flex items-center justify-center hover:bg-butter transition-colors" title="Xem nhanh">
+                  <i class="fa-regular fa-eye text-xs text-cocoa"></i>
+                </button>
+                <button onclick="toggleWishlist('${p.id}')" class="w-9 h-9 rounded-full bg-cream border-2 border-cocoa flex items-center justify-center hover:bg-pastelPink transition-colors ${isFav ? 'bg-pastelPink text-rose-600' : ''}" title="Yêu thích">
+                  <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="cursor-pointer py-2" onclick="openProductModal('${p.id}')">
+              ${getProductVisualHTML(p, "w-44 h-44")}
+            </div>
+
+            <div class="mt-3 flex-1 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold text-cocoaLight mb-1">
+                  <span>${p.categoryLabel}</span>
+                  <span class="text-amber-600">★ ${p.rating} (${p.reviews})</span>
+                </div>
+                <h3 onclick="openProductModal('${p.id}')" class="font-serif text-xl font-bold text-cocoa hover:text-caramel transition-colors cursor-pointer">
+                  ${p.name}
+                </h3>
+                <p class="text-xs text-cocoaLight mt-1.5 line-clamp-2 font-medium">
+                  ${p.shortDesc}
+                </p>
+              </div>
+
+              <div class="pt-4 mt-4 border-t border-cocoa/15 flex items-center justify-between">
+                <div>
+                  <div class="font-serif text-xl font-bold text-cocoa">${formatPrice}</div>
+                  <div class="text-[11px] text-cocoaLight line-through">${formatOld}</div>
+                </div>
+                <button onclick="quickAddProduct('${p.id}', event)" class="btn-3d-cocoa px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-1.5">
+                  <i class="fa-solid fa-plus text-pastelPink"></i> Thêm giỏ
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function quickAddProduct(prodId, event) {
+      const prod = PRODUCTS.find(p => p.id === prodId);
+      if (!prod) return;
+      addToCart({
+        id: prod.id,
+        name: prod.name,
+        price: prod.price,
+        size: 'Tiêu chuẩn (110g)',
+        sweetness: '100% Vị chuẩn',
+        imgUrl: PRODUCT_IMAGES_CONFIG[prod.id] || DEFAULT_PRODUCT_IMAGE
+      });
+      spawnCrumbParticles(event.clientX, event.clientY);
+      playPopSound(780);
+      showToast(`Đã thêm ${prod.name} vào giỏ hàng!`);
+    }
+    window.quickAddProduct = quickAddProduct;
+
+    // Wishlist
+    function toggleWishlist(prodId) {
+      const idx = wishlist.indexOf(prodId);
+      if (idx > -1) {
+        wishlist.splice(idx, 1);
+        showToast('Đã xóa khỏi danh sách yêu thích.');
+      } else {
+        wishlist.push(prodId);
+        showToast('Đã thêm vào danh sách yêu thích!');
+      }
+      document.getElementById('wishlist-badge').textContent = wishlist.length;
+      renderProducts();
+      playPopSound(650);
+    }
+    window.toggleWishlist = toggleWishlist;
+
+    function openWishlistModal() {
+      const modal = document.getElementById('wishlist-modal');
+      const container = document.getElementById('wishlist-items-container');
+      if (wishlist.length === 0) {
+        container.innerHTML = `<p class="text-xs text-cocoaLight text-center py-8">Chưa có sản phẩm yêu thích nào.</p>`;
+      } else {
+        container.innerHTML = wishlist.map(id => {
+          const prod = PRODUCTS.find(p => p.id === id);
+          if (!prod) return '';
+          return `
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-white border-2 border-cocoa">
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 shrink-0">
+                  ${getProductVisualHTML(prod, "w-14 h-14")}
+                </div>
+                <div>
+                  <h4 class="font-serif font-bold text-sm text-cocoa">${prod.name}</h4>
+                  <div class="text-xs text-caramel font-bold">${new Intl.NumberFormat('vi-VN').format(prod.price)}đ</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="quickAddProduct('${prod.id}', event); closeWishlistModal();" class="btn-3d-cocoa px-3 py-1.5 rounded-xl text-[11px] font-bold">Thêm giỏ</button>
+                <button onclick="toggleWishlist('${prod.id}'); openWishlistModal();" class="text-rose-600 p-2"><i class="fa-solid fa-trash text-xs"></i></button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeWishlistModal() {
+      document.getElementById('wishlist-modal').classList.add('hidden');
+      document.getElementById('wishlist-modal').classList.remove('flex');
+    }
+
+    // Custom Box Builder (Mix & Match)
+    function setBoxCapacity(cap) {
+      boxCapacity = cap;
+      const b4 = document.getElementById('box-cap-4');
+      const b6 = document.getElementById('box-cap-6');
+      if (cap === 4) {
+        b4.className = 'btn-3d-cocoa py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center';
+        b6.className = 'btn-3d-cream py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center';
+      } else {
+        b6.className = 'btn-3d-cocoa py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center';
+        b4.className = 'btn-3d-cream py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center';
+      }
+      if (customBoxItems.length > boxCapacity) {
+        customBoxItems = customBoxItems.slice(0, boxCapacity);
+      }
+      renderBoxBuilder();
+      playPopSound(520);
+    }
+    window.setBoxCapacity = setBoxCapacity;
+
+    function renderBoxBuilder() {
+      const slotsContainer = document.getElementById('box-slots-container');
+      const catalogContainer = document.getElementById('builder-catalog');
+      if (!slotsContainer) return;
+
+      // Render Slots
+      let slotsHTML = '';
+      for (let i = 0; i < boxCapacity; i++) {
+        const item = customBoxItems[i];
+        if (item) {
+          slotsHTML += `
+            <div class="relative p-3 rounded-2xl bg-white border-2 border-cocoa flex flex-col items-center text-center shadow-sm group">
+              <button onclick="removeBoxItem(${i})" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-500 text-cream text-[10px] font-bold flex items-center justify-center shadow">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+              <div class="w-14 h-14">
+                ${getProductVisualHTML(item, "w-14 h-14")}
+              </div>
+              <span class="text-[11px] font-bold text-cocoa mt-1 truncate w-full">${item.name}</span>
+            </div>
+          `;
+        } else {
+          slotsHTML += `
+            <div class="p-3 rounded-2xl bg-white/60 border-2 border-dashed border-cocoa/40 flex flex-col items-center justify-center text-center min-h-[110px]">
+              <span class="text-2xl text-cocoa/30 mb-1">🍪</span>
+              <span class="text-[11px] font-bold text-cocoaLight">Ô trống #${i+1}</span>
+            </div>
+          `;
+        }
+      }
+      slotsContainer.innerHTML = slotsHTML;
+
+      // Render Catalog for Builder
+      const cookieProducts = PRODUCTS.filter(p => p.category !== 'gift');
+      catalogContainer.innerHTML = cookieProducts.map(p => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-cocoa hover:bg-pastelPink/20 transition-colors">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 shrink-0">
+              ${getProductVisualHTML(p, "w-10 h-10")}
+            </div>
+            <div>
+              <h5 class="font-serif font-bold text-xs text-cocoa">${p.name}</h5>
+              <div class="text-[10px] text-caramel font-bold">${new Intl.NumberFormat('vi-VN').format(p.price)}đ</div>
+            </div>
+          </div>
+          <button onclick="addBoxItem('${p.id}')" class="btn-3d-butter px-3 py-1 rounded-lg text-[11px] font-bold">Thêm</button>
+        </div>
+      `).join('');
+
+      updateBoxSummary();
+    }
+
+    function addBoxItem(prodId) {
+      if (customBoxItems.length >= boxCapacity) {
+        showToast(`Hộp quà này tối đa chỉ chứa được ${boxCapacity} chiếc bánh!`);
+        return;
+      }
+      const prod = PRODUCTS.find(p => p.id === prodId);
+      if (prod) {
+        customBoxItems.push(prod);
+        renderBoxBuilder();
+        playPopSound(700);
+      }
+    }
+    window.addBoxItem = addBoxItem;
+
+    function removeBoxItem(index) {
+      customBoxItems.splice(index, 1);
+      renderBoxBuilder();
+      playPopSound(480);
+    }
+    window.removeBoxItem = removeBoxItem;
+
+    function updateBoxSummary() {
+      const statusText = document.getElementById('box-status-text');
+      const progressBar = document.getElementById('box-progress-bar');
+      const totalPriceEl = document.getElementById('box-total-price');
+      const addBtn = document.getElementById('add-box-btn');
+
+      const count = customBoxItems.length;
+      statusText.textContent = `${count} / ${boxCapacity} chiếc`;
+      const pct = (count / boxCapacity) * 100;
+      progressBar.style.width = `${pct}%`;
+
+      // Calculate price
+      let basePrice = customBoxItems.reduce((acc, cur) => acc + cur.price, 0);
+      const ribbonRadio = document.querySelector('input[name="box-ribbon"]:checked');
+      const ribbonPrice = ribbonRadio && ribbonRadio.value.includes('Hoàng Gia') ? 15000 : 0;
+      const tinBoxPrice = boxCapacity === 4 ? 45000 : 60000;
+      const discountBox = boxCapacity === 4 ? 0.9 : 0.85;
+
+      const total = Math.round((basePrice + tinBoxPrice + ribbonPrice) * discountBox);
+      totalPriceEl.textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+
+      if (count === boxCapacity) {
+        addBtn.disabled = false;
+        addBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      } else {
+        addBtn.disabled = true;
+        addBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    function addCustomBoxToCart() {
+      if (customBoxItems.length < boxCapacity) return;
+      const ribbonRadio = document.querySelector('input[name="box-ribbon"]:checked');
+      const ribbonName = ribbonRadio ? ribbonRadio.value : 'Nơ Hồng Pastel';
+      const tinBoxPrice = boxCapacity === 4 ? 45000 : 60000;
+      const discountBox = boxCapacity === 4 ? 0.9 : 0.85;
+      let basePrice = customBoxItems.reduce((acc, cur) => acc + cur.price, 0);
+      const ribbonPrice = ribbonName.includes('Hoàng Gia') ? 15000 : 0;
+      const total = Math.round((basePrice + tinBoxPrice + ribbonPrice) * discountBox);
+
+      addToCart({
+        id: 'custom-box-' + Date.now(),
+        name: `Hộp Quà Tự Chọn (${boxCapacity} Chiếc)`,
+        price: total,
+        size: `Hộp ${boxCapacity} vị (${customBoxItems.map(i => i.name).join(', ')})`,
+        sweetness: ribbonName,
+        imgUrl: PRODUCT_IMAGES_CONFIG['c9'] || DEFAULT_PRODUCT_IMAGE
+      });
+
+      showToast('Đã thêm Hộp Quà Tự Chọn vào giỏ hàng thành công!');
+      toggleCartDrawer(true);
+      customBoxItems = [];
+      renderBoxBuilder();
+      playPopSound(850);
+    }
+    window.addCustomBoxToCart = addCustomBoxToCart;
+
+    // Cart Management
+    function addToCart(item) {
+      const existing = cart.find(i => i.id === item.id && i.size === item.size && i.sweetness === item.sweetness);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...item, qty: 1 });
+      }
+      updateCartUI();
+    }
+    window.addToCart = addToCart;
+
+    function updateCartUI() {
+      const countBadge = document.getElementById('cart-count-badge');
+      const totalQty = cart.reduce((acc, cur) => acc + cur.qty, 0);
+      countBadge.textContent = totalQty;
+
+      const container = document.getElementById('cart-items-container');
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16">
+            <span class="text-5xl block mb-2">🛒🍪</span>
+            <h4 class="font-serif text-xl font-bold text-cocoa">Giỏ hàng đang trống</h4>
+            <p class="text-xs text-cocoaLight mt-1">Hãy chọn ngay vài chiếc bánh quy thơm ngon nhé!</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = cart.map((item, idx) => `
+          <div class="flex items-center justify-between p-3.5 rounded-2xl bg-white border-2 border-cocoa gap-3">
+            <img src="${item.imgUrl}" alt="${item.name}" class="w-14 h-14 object-contain rounded-xl bg-cream border border-cocoa/20 shrink-0" crossorigin="anonymous" onerror="this.src='https://placehold.co/100x100/5C3A21/FFFDF7?text=Cookie'" />
+            <div class="flex-1 min-w-0">
+              <h5 class="font-serif font-bold text-xs text-cocoa truncate">${item.name}</h5>
+              <div class="text-[10px] text-cocoaLight truncate">${item.size} • ${item.sweetness}</div>
+              <div class="text-xs font-bold text-caramel mt-0.5">${new Intl.NumberFormat('vi-VN').format(item.price)}đ</div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="updateCartQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-butter border border-cocoa text-xs font-bold flex items-center justify-center">-</button>
+              <span class="text-xs font-bold w-5 text-center">${item.qty}</span>
+              <button onclick="updateCartQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-butter border border-cocoa text-xs font-bold flex items-center justify-center">+</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Calculations
+      const subtotal = cart.reduce((acc, cur) => acc + (cur.price * cur.qty), 0);
+      let discount = 0;
+      if (appliedPromo === 'SWEET10') discount = subtotal * 0.1;
+      else if (appliedPromo === 'BUTTER20') discount = subtotal * 0.2;
+
+      const shipping = subtotal >= 300000 || subtotal === 0 ? 0 : 30000;
+      const total = subtotal - discount + shipping;
+
+      document.getElementById('cart-subtotal').textContent = new Intl.NumberFormat('vi-VN').format(subtotal) + 'đ';
+      document.getElementById('cart-discount').textContent = '-' + new Intl.NumberFormat('vi-VN').format(discount) + 'đ';
+      document.getElementById('cart-shipping').textContent = shipping === 0 ? 'Miễn phí (0đ)' : '30.000đ';
+      document.getElementById('cart-total').textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+
+      // Freeship bar
+      const freeshipTarget = 300000;
+      const pct = Math.min(100, (subtotal / freeshipTarget) * 100);
+      document.getElementById('freeship-bar').style.width = `${pct}%`;
+      document.getElementById('freeship-percent-text').textContent = `${Math.round(pct)}%`;
+      if (subtotal >= freeshipTarget) {
+        document.getElementById('freeship-status-text').textContent = '🎉 Chúc mừng! Bạn đã được Freeship toàn quốc.';
+      } else {
+        const remaining = freeshipTarget - subtotal;
+        document.getElementById('freeship-status-text').textContent = `Mua thêm ${new Intl.NumberFormat('vi-VN').format(remaining)}đ để được Freeship!`;
+      }
+    }
+
+    function updateCartQty(idx, delta) {
+      cart[idx].qty += delta;
+      if (cart[idx].qty <= 0) {
+        cart.splice(idx, 1);
+      }
+      updateCartUI();
+      playPopSound(550);
+    }
+    window.updateCartQty = updateCartQty;
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById('cart-drawer');
+      const backdrop = document.getElementById('cart-backdrop');
+      const panel = document.getElementById('cart-panel');
+
+      if (open) {
+        drawer.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          panel.classList.remove('translate-x-full');
+        });
+        playPopSound(620);
+      } else {
+        backdrop.classList.add('opacity-0');
+        panel.classList.add('translate-x-full');
+        setTimeout(() => drawer.classList.add('hidden'), 300);
+      }
+    }
+    window.toggleCartDrawer = toggleCartDrawer;
+
+    function applyPromoCode() {
+      const code = document.getElementById('promo-code-input').value.trim().toUpperCase();
+      if (code === 'SWEET10' || code === 'FREESHIP' || code === 'BUTTER20') {
+        appliedPromo = code;
+        showToast(`Áp dụng mã giảm giá ${code} thành công!`);
+        updateCartUI();
+        playPopSound(750);
+      } else {
+        showToast('Mã giảm giá không hợp lệ hoặc đã hết hạn.');
+      }
+    }
+    window.applyPromoCode = applyPromoCode;
+
+    // Quick View Modal
+    function openProductModal(prodId) {
+      const prod = PRODUCTS.find(p => p.id === prodId);
+      if (!prod) return;
+      const modal = document.getElementById('product-modal');
+      const inner = document.getElementById('modal-content-inner');
+
+      inner.innerHTML = `
+        <div class="sm:col-span-6 flex items-center justify-center p-4 bg-pastelPink/30 rounded-3xl border-2 border-cocoa">
+          ${getProductVisualHTML(prod, "w-48 h-48")}
+        </div>
+        <div class="sm:col-span-6 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-butter border border-cocoa text-[11px] font-extrabold uppercase">${prod.tag}</span>
+            <span class="text-amber-600 text-xs font-bold">★ ${prod.rating} (${prod.reviews} đánh giá)</span>
+          </div>
+          <h3 class="font-serif text-2xl font-bold text-cocoa">${prod.name}</h3>
+          <p class="text-xs text-cocoaLight leading-relaxed">${prod.description}</p>
+          
+          <div class="space-y-2 pt-2 border-t border-cocoa/15 text-xs font-semibold text-cocoa">
+            <div>🔥 Năng lượng: <span class="font-bold text-caramel">${prod.calories} kcal</span></div>
+            <div>⏱️ Chuẩn bị: <span class="font-bold text-caramel">${prod.prep}</span></div>
+          </div>
+
+          <div class="pt-3">
+            <div class="font-serif text-2xl font-bold text-cocoa mb-3">${new Intl.NumberFormat('vi-VN').format(prod.price)}đ</div>
+            <button onclick="quickAddProduct('${prod.id}', event); closeProductModal(); toggleCartDrawer(true);" class="w-full btn-3d-cocoa py-3 rounded-2xl text-xs font-bold flex items-center justify-center gap-2">
+              <i class="fa-solid fa-cart-plus text-pastelPink"></i> Thêm Vào Giỏ Hàng
+            </button>
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playPopSound(580);
+    }
+    window.openProductModal = openProductModal;
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.add('hidden');
+      document.getElementById('product-modal').classList.remove('flex');
+    }
+
+    // Checkout
+    function openCheckoutModal() {
+      if (cart.length === 0) {
+        showToast('Giỏ hàng của bạn đang trống!');
+        return;
+      }
+      toggleCartDrawer(false);
+      const modal = document.getElementById('checkout-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playPopSound(600);
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkout-modal').classList.add('hidden');
+      document.getElementById('checkout-modal').classList.remove('flex');
+    }
+
+    const savedOrders = [];
+
+    function handleCheckoutSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('chk-name').value;
+      const phone = document.getElementById('chk-phone').value;
+      const address = document.getElementById('chk-address').value;
+      const payment = document.getElementById('chk-payment').value;
+
+      const orderCode = '#SC-' + Math.floor(100000 + Math.random() * 900000);
+      const newOrder = {
+        code: orderCode,
+        name,
+        phone,
+        address,
+        payment,
+        items: [...cart],
+        date: new Date().toLocaleString('vi-VN'),
+        status: 'Đang nướng bánh mới (Chuẩn bị)'
+      };
+
+      savedOrders.push(newOrder);
+      cart = [];
+      updateCartUI();
+      closeCheckoutModal();
+
+      showToast(`Đặt hàng thành công! Mã đơn của bạn là ${orderCode}`);
+      playPopSound(900);
+
+      // Scroll to tracking section
+      document.getElementById('track-order').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('track-input').value = orderCode;
+      handleTrackOrder();
+    }
+
+    function handleTrackOrder() {
+      const val = document.getElementById('track-input').value.trim();
+      const resBox = document.getElementById('track-result-box');
+      if (!val) {
+        showToast('Vui lòng nhập mã đơn hàng hoặc số điện thoại!');
+        return;
+      }
+
+      const found = savedOrders.find(o => o.code.toLowerCase() === val.toLowerCase() || o.phone === val);
+      resBox.classList.remove('hidden');
+
+      if (found) {
+        resBox.innerHTML = `
+          <div class="flex items-center justify-between border-b border-cocoa/15 pb-2">
+            <span class="font-bold text-cocoa">Mã đơn: ${found.code}</span>
+            <span class="px-2.5 py-1 rounded-full bg-pastelPink text-[11px] font-extrabold text-cocoa">${found.status}</span>
+          </div>
+          <div class="text-xs space-y-1 pt-1 text-cocoa">
+            <div>👤 <b>Khách hàng:</b> ${found.name} (${found.phone})</div>
+            <div>📍 <b>Địa chỉ:</b> ${found.address}</div>
+            <div>🕒 <b>Thời gian:</b> ${found.date}</div>
+            <div>🍪 <b>Sản phẩm:</b> ${found.items.map(i => `${i.qty}x ${i.name}`).join(', ')}</div>
+          </div>
+        `;
+      } else {
+        resBox.innerHTML = `
+          <div class="text-center py-4 text-cocoa">
+            <p class="font-bold">Không tìm thấy đơn hàng với từ khóa: "${val}"</p>
+            <p class="text-[11px] text-cocoaLight mt-1">Hãy kiểm tra lại mã đơn (VD: #SC-123456) hoặc số điện thoại đặt hàng.</p>
+          </div>
+        `;
+      }
+      playPopSound(650);
+    }
+
+    // Auth & Admin State System
+    let currentUser = null;
+    const ADMIN_ACCOUNT = {
+      name: 'Quản Trị Viên (Admin)',
+      email: 'admin@sweetcrumb.vn',
+      password: 'admin123',
+      role: 'admin'
+    };
+
+    function openAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      const formView = document.getElementById('auth-form-view');
+      const profileView = document.getElementById('auth-profile-view');
+
+      if (currentUser) {
+        formView.classList.add('hidden');
+        profileView.classList.remove('hidden');
+        document.getElementById('profile-name').textContent = currentUser.name;
+        document.getElementById('profile-email').textContent = currentUser.email;
+        const roleBadge = document.getElementById('profile-role-badge');
+        const adminBox = document.getElementById('admin-shortcuts-box');
+        const avatarIcon = document.getElementById('profile-avatar-icon');
+
+        if (currentUser.role === 'admin') {
+          roleBadge.textContent = 'Quản Trị Viên (Admin)';
+          roleBadge.className = 'px-3 py-1 rounded-full bg-pastelPink border-2 border-cocoa text-xs font-extrabold uppercase text-cocoa';
+          adminBox.classList.remove('hidden');
+          avatarIcon.textContent = '👑';
+        } else {
+          roleBadge.textContent = 'Khách hàng thân thiết';
+          roleBadge.className = 'px-3 py-1 rounded-full bg-butter border border-cocoa text-xs font-extrabold uppercase text-cocoa';
+          adminBox.classList.add('hidden');
+          avatarIcon.textContent = '🍪';
+        }
+      } else {
+        formView.classList.remove('hidden');
+        profileView.classList.add('hidden');
+      }
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playPopSound(540);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+      document.getElementById('auth-modal').classList.remove('flex');
+    }
+
+    function switchAuthTab(tab) {
+      const loginForm = document.getElementById('login-form');
+      const registerForm = document.getElementById('register-form');
+      const loginBtn = document.getElementById('tab-login-btn');
+      const registerBtn = document.getElementById('tab-register-btn');
+
+      if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+        loginBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all';
+        registerBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-cocoaLight transition-all';
+      } else {
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+        registerBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all';
+        loginBtn.className = 'flex-1 py-2 rounded-xl text-xs font-bold text-cocoaLight transition-all';
+      }
+      playPopSound(480);
+    }
+
+    function fillAdminCredentials() {
+      document.getElementById('login-email').value = ADMIN_ACCOUNT.email;
+      document.getElementById('login-password').value = ADMIN_ACCOUNT.password;
+      playPopSound(600);
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      const emailInput = document.getElementById('login-email').value.trim().toLowerCase();
+      const passInput = document.getElementById('login-password').value;
+
+      if (emailInput === ADMIN_ACCOUNT.email) {
+        if (passInput !== ADMIN_ACCOUNT.password) {
+          showToast('Mật khẩu tài khoản Quản trị viên không chính xác!');
+          playPopSound(320);
+          return;
+        }
+        currentUser = {
+          name: ADMIN_ACCOUNT.name,
+          email: ADMIN_ACCOUNT.email,
+          role: 'admin'
+        };
+        showToast('Đăng nhập thành công tài khoản Quản trị viên (Admin)!');
+      } else {
+        currentUser = {
+          name: emailInput.split('@')[0] || 'Khách Hàng',
+          email: emailInput,
+          role: 'customer'
+        };
+        showToast(`Chào mừng bạn quay lại, ${currentUser.name}!`);
+      }
+
+      updateAuthUIState();
+      closeAuthModal();
+      switchHeroCookie(currentHeroIdx);
+      renderProducts();
+      renderBoxBuilder();
+      playPopSound(750);
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+
+      if (email === ADMIN_ACCOUNT.email) {
+        showToast('Email này thuộc quyền Quản trị viên, vui lòng dùng email khác!');
+        return;
+      }
+
+      currentUser = { name, email, role: 'customer' };
+
+      showToast(`Đăng ký thành công! Chào mừng ${name}.`);
+      updateAuthUIState();
+      closeAuthModal();
+      switchHeroCookie(currentHeroIdx);
+      renderProducts();
+      renderBoxBuilder();
+      playPopSound(780);
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      updateAuthUIState();
+      closeAuthModal();
+      switchHeroCookie(currentHeroIdx);
+      renderProducts();
+      renderBoxBuilder();
+      showToast('Đã đăng xuất tài khoản thành công.');
+      playPopSound(500);
+    }
+
+    function updateAuthUIState() {
+      const authBtnLabel = document.getElementById('auth-btn-label');
+      const adminNavBtn = document.getElementById('nav-admin-btn');
+      const adminBulkUpload = document.getElementById('admin-bulk-upload-wrapper');
+
+      if (currentUser) {
+        authBtnLabel.textContent = isStrictAdmin() ? 'Admin' : currentUser.name.split(' ')[0];
+        if (isStrictAdmin()) {
+          if (adminNavBtn) { adminNavBtn.classList.remove('hidden'); adminNavBtn.classList.add('flex'); }
+          if (adminBulkUpload) { adminBulkUpload.classList.remove('hidden'); adminBulkUpload.classList.add('flex'); }
+        } else {
+          if (adminNavBtn) { adminNavBtn.classList.add('hidden'); adminNavBtn.classList.remove('flex'); }
+          if (adminBulkUpload) { adminBulkUpload.classList.add('hidden'); adminBulkUpload.classList.remove('flex'); }
+        }
+      } else {
+        authBtnLabel.textContent = 'Khách Hàng';
+        if (adminNavBtn) { adminNavBtn.classList.add('hidden'); adminNavBtn.classList.remove('flex'); }
+        if (adminBulkUpload) { adminBulkUpload.classList.add('hidden'); adminBulkUpload.classList.remove('flex'); }
+      }
+    }
+
+    // Admin Dashboard Modal
+    function openAdminModal() {
+      if (!isStrictAdmin()) {
+        showToast('Chỉ tài khoản Admin mới có quyền truy cập mục này!');
+        openAuthModal();
+        return;
+      }
+      renderAdminLists();
+      const modal = document.getElementById('admin-dashboard-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playPopSound(600);
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-dashboard-modal').classList.add('hidden');
+      document.getElementById('admin-dashboard-modal').classList.remove('flex');
+    }
+
+    function switchAdminTab(tab) {
+      const tabFb = document.getElementById('adm-tab-firebase');
+      const tabPr = document.getElementById('adm-tab-products');
+      const tabOr = document.getElementById('adm-tab-orders');
+
+      const contentFb = document.getElementById('adm-content-firebase');
+      const contentPr = document.getElementById('adm-content-products');
+      const contentOr = document.getElementById('adm-content-orders');
+
+      tabFb.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold text-cocoaLight transition-all';
+      tabPr.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold text-cocoaLight transition-all';
+      tabOr.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold text-cocoaLight transition-all';
+
+      contentFb.classList.add('hidden');
+      contentPr.classList.add('hidden');
+      contentOr.classList.add('hidden');
+
+      if (tab === 'firebase') {
+        tabFb.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all';
+        contentFb.classList.remove('hidden');
+      } else if (tab === 'products') {
+        tabPr.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all';
+        contentPr.classList.remove('hidden');
+      } else {
+        tabOr.className = 'flex-1 py-2.5 rounded-xl text-xs font-bold bg-pastelPink border border-cocoa text-cocoa transition-all';
+        contentOr.classList.remove('hidden');
+      }
+      playPopSound(450);
+    }
+
+    function testFirebasePing() {
+      const box = document.getElementById('firebase-ping-result');
+      box.innerHTML = `<span class="text-amber-600 animate-pulse">Đang kết nối tới project cake-69ea2...</span>`;
+      setTimeout(() => {
+        box.innerHTML = `<span class="text-emerald-700 font-bold">✓ Ping thành công! Kết nối Cloud Firestore (cake-69ea2) ổn định (Độ trễ: 34ms).</span>`;
+        playPopSound(800);
+      }, 600);
+    }
+
+    function syncAllProductsToCloud() {
+      showToast(`Đã đồng bộ thành công ${PRODUCTS.length} sản phẩm bánh quy lên Firestore Database!`);
+      playPopSound(900);
+    }
+
+    // Add & Delete Product Functions (Admin Only)
+    let pendingNewProductImage = null;
+
+    function openAddProductModal() {
+      if (!isStrictAdmin()) {
+        showToast('Chỉ tài khoản Admin mới có thể thêm sản phẩm!');
+        return;
+      }
+      pendingNewProductImage = null;
+      const form = document.getElementById('add-product-form');
+      if (form) form.reset();
+      const preview = document.getElementById('new-prod-img-preview');
+      if (preview) preview.src = DEFAULT_PRODUCT_IMAGE;
+
+      const modal = document.getElementById('add-product-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      playPopSound(640);
+    }
+    window.openAddProductModal = openAddProductModal;
+
+    function closeAddProductModal() {
+      const modal = document.getElementById('add-product-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    window.closeAddProductModal = closeAddProductModal;
+
+    function handleNewProductImagePreview(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        pendingNewProductImage = e.target.result;
+        const preview = document.getElementById('new-prod-img-preview');
+        if (preview) preview.src = pendingNewProductImage;
+        playPopSound(680);
+      };
+      reader.readAsDataURL(file);
+    }
+    window.handleNewProductImagePreview = handleNewProductImagePreview;
+
+    function handleAddProductSubmit(event) {
+      event.preventDefault();
+      if (!isStrictAdmin()) return;
+
+      const name = document.getElementById('new-prod-name').value.trim();
+      const category = document.getElementById('new-prod-category').value;
+      const price = parseInt(document.getElementById('new-prod-price').value, 10) || 45000;
+      const oldPriceInput = parseInt(document.getElementById('new-prod-oldprice').value, 10);
+      const oldPrice = oldPriceInput && oldPriceInput > price ? oldPriceInput : price + 7000;
+      const tag = document.getElementById('new-prod-tag').value.trim() || 'Mới ra lò';
+      const calories = parseInt(document.getElementById('new-prod-calories').value, 10) || 275;
+      const prep = document.getElementById('new-prod-prep').value.trim() || 'Nướng mới mỗi sáng';
+      const lowSugar = document.getElementById('new-prod-lowsugar').checked;
+      const shortDesc = document.getElementById('new-prod-shortdesc').value.trim();
+      const description = document.getElementById('new-prod-desc').value.trim() || shortDesc;
+
+      const categoryLabels = {
+        'soft': 'Soft Cookies (Mềm)',
+        'crunchy': 'Crunchy (Giòn bơ)',
+        'matcha-nut': 'Matcha & Hạt',
+        'gift': 'Hộp Quà Tặng'
+      };
+
+      const newId = 'c' + (Date.now().toString().slice(-5));
+      const chosenImg = pendingNewProductImage || DEFAULT_PRODUCT_IMAGE;
+      PRODUCT_IMAGES_CONFIG[newId] = chosenImg;
+      if (pendingNewProductImage) {
+        processedImageCache[pendingNewProductImage] = pendingNewProductImage;
+      }
+
+      const newProd = {
+        id: newId,
+        name,
+        category,
+        categoryLabel: categoryLabels[category] || 'Soft Cookies (Mềm)',
+        price,
+        oldPrice,
+        rating: 5.0,
+        reviews: 1,
+        tag,
+        badge: 'Mới',
+        shortDesc,
+        description,
+        lowSugar,
+        calories,
+        prep
+      };
+
+      PRODUCTS.unshift(newProd);
+
+      closeAddProductModal();
+      renderProducts();
+      renderBoxBuilder();
+      renderAdminLists();
+      showToast(`Đã thêm bánh "${name}" vào thực đơn thành công!`);
+      playPopSound(880);
+    }
+    window.handleAddProductSubmit = handleAddProductSubmit;
+
+    function deleteProductAdmin(prodId) {
+      if (!isStrictAdmin()) return;
+      if (PRODUCTS.length <= 1) {
+        showToast('Thực đơn cần giữ lại ít nhất 1 sản phẩm!');
+        return;
+      }
+      const idx = PRODUCTS.findIndex(p => p.id === prodId);
+      if (idx > -1) {
+        const removed = PRODUCTS.splice(idx, 1)[0];
+        renderProducts();
+        renderBoxBuilder();
+        renderAdminLists();
+        showToast(`Đã xóa sản phẩm "${removed.name}" khỏi thực đơn.`);
+        playPopSound(460);
+      }
+    }
+    window.deleteProductAdmin = deleteProductAdmin;
+
+    function renderAdminLists() {
+      // Products list
+      const prodList = document.getElementById('admin-product-list');
+      if (prodList) {
+        prodList.innerHTML = PRODUCTS.map(p => `
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-cocoa gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <div class="w-10 h-10 shrink-0">${getProductVisualHTML(p, "w-10 h-10")}</div>
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-cocoa truncate">${p.name}</div>
+                <div class="text-[10px] text-cocoaLight">${new Intl.NumberFormat('vi-VN').format(p.price)}đ • ${p.categoryLabel}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="openSpecificImageUpload('${p.id}')" class="btn-3d-butter px-2.5 py-1 rounded-lg text-[11px] font-bold">Đổi ảnh</button>
+              <button onclick="deleteProductAdmin('${p.id}')" class="px-2 py-1 rounded-lg bg-rose-100 border border-rose-700 text-rose-700 text-[11px] font-bold hover:bg-rose-200 transition-colors" title="Xóa sản phẩm">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Orders list
+      const ordersList = document.getElementById('admin-orders-list');
+      if (ordersList) {
+        if (savedOrders.length === 0) {
+          ordersList.innerHTML = `<p class="text-xs text-cocoaLight text-center py-6">Chưa có đơn hàng nào được đặt.</p>`;
+        } else {
+          ordersList.innerHTML = savedOrders.map(o => `
+            <div class="p-3 rounded-xl bg-white border border-cocoa text-xs flex items-center justify-between">
+              <div>
+                <span class="font-bold text-cocoa">${o.code} - ${o.name} (${o.phone})</span>
+                <div class="text-[10px] text-cocoaLight">${o.date} • Tổng: ${new Intl.NumberFormat('vi-VN').format(o.items.reduce((a,b)=>a+b.price*b.qty,0))}đ</div>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-butter text-[10px] font-bold text-cocoa">${o.status}</span>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'pointer-events-auto bg-cocoa text-cream border-2 border-pastelPink px-4 py-3 rounded-2xl shadow-lg flex items-center gap-2.5 text-xs sm:text-sm font-bold transition-all duration-300 translate-y-4 opacity-0';
+      toast.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-pastelPink text-cocoa flex items-center justify-center text-xs shrink-0">🍪</span>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+      setTimeout(() => {
+        toast.classList.add('translate-y-3', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 2700);
+    }
+
+    // Initialization on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('hero-cookie-svg').innerHTML = getProductVisualHTML(HERO_FEATURED[0], "w-52 h-52");
+      document.getElementById('wishlist-badge').textContent = wishlist.length;
+      renderProducts();
+      renderBoxBuilder();
+      updateCartUI();
+
+      const splash = document.getElementById('splash-screen');
+      const bar = document.getElementById('splash-bar');
+      requestAnimationFrame(() => {
+        bar.style.width = '100%';
+      });
+
+      const openCurtain = () => {
+        splash.classList.add('open');
+        setTimeout(() => {
+          splash.style.visibility = 'hidden';
+          splash.style.pointerEvents = 'none';
+        }, 750);
+      };
+
+      setTimeout(openCurtain, 1100);
+      splash.addEventListener('click', openCurtain);
+    });
+  </script>
+
+  <style>
+    :root {
+      --cream: #FFFDF7;
+      --pink: #FAD2E1;
+      --butter: #FFF1B5;
+      --cocoa: #5C3A21;
+    }
+
+    body {
+      background-color: #FFFDF7;
+      color: #5C3A21;
+      font-family: 'Quicksand', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(#FAD2E1 0.85px, transparent 0.85px), 
+        radial-gradient(#FFF1B5 1px, #FFFDF7 1px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FFFDF7;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #E8C5D3;
+      border-radius: 9999px;
+      border: 2px solid #FFFDF7;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5C3A21;
+    }
+
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: all;
+      transition: visibility 0.6s ease;
+    }
+    .curtain-panel {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 51%;
+      background: #FFFDF7;
+      border-bottom: 6px solid #FAD2E1;
+      transition: transform 0.75s cubic-bezier(0.77, 0, 0.175, 1);
+      z-index: 1;
+    }
+    .curtain-left {
+      left: 0;
+      background-image: repeating-linear-gradient(90deg, #FFFDF7 0px, #FFFDF7 40px, #FFF7F9 40px, #FFF7F9 80px);
+      border-right: 2px dashed #FAD2E1;
+    }
+    .curtain-right {
+      right: 0;
+      background-image: repeating-linear-gradient(90deg, #FFFDF7 0px, #FFFDF7 40px, #FFF7F9 40px, #FFF7F9 80px);
+      border-left: 2px dashed #FAD2E1;
+    }
+    #splash-screen.open .curtain-left {
+      transform: translateX(-102%);
+    }
+    #splash-screen.open .curtain-right {
+      transform: translateX(102%);
+    }
+    #splash-screen.open .splash-content {
+      opacity: 0;
+      transform: scale(0.92) translateY(-10px);
+    }
+    .splash-content {
+      position: relative;
+      z-index: 2;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-3d-cocoa {
+      position: relative;
+      background-color: #5C3A21;
+      color: #FFFDF7;
+      border: 2px solid #5C3A21;
+      box-shadow: 0 5px 0 #3A2210, 0 8px 15px rgba(92, 58, 33, 0.2);
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background-color 0.2s ease;
+      overflow: hidden;
+    }
+    .btn-3d-cocoa:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #3A2210, 0 12px 20px rgba(92, 58, 33, 0.25);
+      background-color: #6D4629;
+    }
+    .btn-3d-cocoa:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #3A2210, 0 2px 5px rgba(92, 58, 33, 0.2);
+    }
+
+    .btn-3d-pink {
+      position: relative;
+      background-color: #FAD2E1;
+      color: #5C3A21;
+      border: 2px solid #5C3A21;
+      box-shadow: 0 5px 0 #5C3A21, 0 8px 15px rgba(250, 210, 225, 0.45);
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background-color 0.2s ease;
+      overflow: hidden;
+    }
+    .btn-3d-pink:hover {
+      transform: translateY(-2px);
+      background-color: #FCE2EC;
+      box-shadow: 0 7px 0 #5C3A21, 0 12px 20px rgba(250, 210, 225, 0.6);
+    }
+    .btn-3d-pink:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 #5C3A21;
+    }
+
+    .btn-3d-butter {
+      position: relative;
+      background-color: #FFF1B5;
+      color: #5C3A21;
+      border: 2px solid #5C3A21;
+      box-shadow: 0 4px 0 #5C3A21;
+      transition: transform 0.16s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.16s ease, background-color 0.2s ease;
+      overflow: hidden;
+    }
+    .btn-3d-butter:hover {
+      transform: translateY(-2px);
+      background-color: #FFF6CC;
+      box-shadow: 0 6px 0 #5C3A21;
+    }
+    .btn-3d-butter:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #5C3A21;
+    }
+
+    .btn-3d-cream {
+      position: relative;
+      background-color: #FFFDF7;
+      color: #5C3A21;
+      border: 2px solid #5C3A21;
+      box-shadow: 0 4px 0 #E5D5C5;
+      transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+    }
+    .btn-3d-cream:hover {
+      transform: translateY(-2px);
+      border-color: #5C3A21;
+      box-shadow: 0 6px 0 #5C3A21;
+      background-color: #FFF9EB;
+    }
+    .btn-3d-cream:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #5C3A21;
+    }
+
+    .bakery-card {
+      background: #FFFDF7;
+      border: 2px solid #5C3A21;
+      box-shadow: 0 8px 0 #EADCCF;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .bakery-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 13px 0 #FAD2E1, 0 18px 28px rgba(92, 58, 33, 0.09);
+    }
+
+    .crumb-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      animation: crumbFly 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes crumbFly {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.7) rotate(0deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.25) rotate(var(--rot));
+      }
+    }
+
+    @keyframes badgePop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.45) rotate(-8deg); }
+      75% { transform: scale(0.9) rotate(4deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .badge-pop {
+      animation: badgePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  </style>
+</body>
+</html>
