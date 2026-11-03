@@ -114,9 +114,9 @@
   <!-- ========================================== -->
   <!-- 3B. AUTO-SLIDING PROMO BANNER CAROUSEL     -->
   <!-- ========================================== -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full">
+ <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full">
     <div id="promo-banner-carousel" 
-         class="relative w-full h-48 sm:h-72 md:h-80 lg:h-[500px] rounded-[2rem] border-2 border-cocoa shadow-[0_8px_0_#5C3A21] overflow-hidden bg-pastelPink/40 group select-none"
+         class="relative w-full h-48 sm:h-72 md:h-80 lg:h-[450px] rounded-[1rem] border-2 border-cocoa shadow-[0_8px_0_#5C3A21] overflow-hidden bg-pastelPink/40 group select-none"
          onmouseenter="pauseBannerAutoSlide()"
          onmouseleave="resumeBannerAutoSlide()">
       
@@ -124,8 +124,11 @@
       <div id="banner-slides-track" class="w-full h-full relative">
         <!-- Slide 1 -->
         <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-100 z-10">
-          <img src="banner 1.jpg" alt="Strawberry Parfait Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/8B1A1A/FFFDF7?text=Sweet+Cake+-+Strawberry+Parfait+Season'" />
-          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/50 via-transparent to-transparent pointer-events-none"></div>
+          <!-- Background Blur -->
+          <img src="banner 1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover scale-110 blur-md opacity-60" crossorigin="anonymous" />
+          <!-- Foreground Contain -->
+          <img src="banner 1.jpg" alt="Strawberry Parfait Banner" class="absolute inset-0 w-full h-full object-contain" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/8B1A1A/FFFDF7?text=Sweet+Cake+-+Strawberry+Parfait+Season'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/70 via-cocoa/10 to-transparent pointer-events-none"></div>
           <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
             <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
               🍓 Bộ Sưu Tập Dâu Tây Tươi Hokkaido
@@ -135,8 +138,11 @@
 
         <!-- Slide 2 -->
         <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 z-0">
-          <img src="banner 2.jpg" alt="White Choco Strawberry Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/FAD2E1/5C3A21?text=White+Choco+Strawberry+Series'" />
-          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/40 via-transparent to-transparent pointer-events-none"></div>
+          <!-- Background Blur -->
+          <img src="banner 2.jpg" alt="" class="absolute inset-0 w-full h-full object-cover scale-110 blur-md opacity-60" crossorigin="anonymous" />
+          <!-- Foreground Contain -->
+          <img src="banner 2.jpg" alt="White Choco Strawberry Banner" class="absolute inset-0 w-full h-full object-contain" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/FAD2E1/5C3A21?text=White+Choco+Strawberry+Series'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/70 via-cocoa/10 to-transparent pointer-events-none"></div>
           <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
             <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
               🍫 Kem Dâu Tây Sô-Cô-La Trắng Ngọt Ngào
@@ -146,8 +152,11 @@
 
         <!-- Slide 3 -->
         <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 z-0">
-          <img src="banner 3.jpg" alt="Strawberry Sweets Daifuku Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/D94E4E/FFFDF7?text=Handmade+Strawberry+Sweets'" />
-          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/45 via-transparent to-transparent pointer-events-none"></div>
+          <!-- Background Blur -->
+          <img src="banner 3.jpg" alt="" class="absolute inset-0 w-full h-full object-cover scale-110 blur-md opacity-60" crossorigin="anonymous" />
+          <!-- Foreground Contain -->
+          <img src="banner 3.jpg" alt="Strawberry Sweets Daifuku Banner" class="absolute inset-0 w-full h-full object-contain" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/D94E4E/FFFDF7?text=Handmade+Strawberry+Sweets'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/70 via-cocoa/10 to-transparent pointer-events-none"></div>
           <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
             <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
               🍰 Bánh Ngọt & Mochi Dâu Tây Thủ Công
