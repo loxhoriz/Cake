@@ -40,7 +40,7 @@
     <div class="curtain-panel curtain-right"></div>
     <div class="splash-content text-center px-6">
       <div class="w-28 h-28 mx-auto mb-4 bg-white/90 rounded-full border-4 border-cocoa flex items-center justify-center shadow-2xl animate-bounce overflow-hidden p-2">
-        <img src="logocake1.png" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-full" crossorigin="anonymous" />
+        <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-full" crossorigin="anonymous" />
       </div>
       <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-cream tracking-wide">Sweet Cake</h1>
       <p class="text-xs sm:text-sm text-pastelPink font-bold mt-2 uppercase tracking-widest">Tiệm Bánh Ngọt & Bánh Quy Thủ Công</p>
@@ -64,7 +64,7 @@
       <!-- Brand Logo -->
       <a href="#" class="flex items-center gap-3 group">
         <div class="w-12 h-12 rounded-2xl bg-white border-2 border-cocoa flex items-center justify-center shadow-[0_3px_0_#5C3A21] group-hover:rotate-6 transition-transform overflow-hidden p-1">
-          <img src="logocake1.png" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
+          <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
         </div>
         <div>
           <span class="font-serif text-xl sm:text-2xl font-bold text-cocoa block leading-tight">Sweet Cake</span>
@@ -112,17 +112,80 @@
   </nav>
 
   <!-- ========================================== -->
+  <!-- 3B. AUTO-SLIDING PROMO BANNER CAROUSEL     -->
+  <!-- ========================================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2 w-full">
+    <div id="promo-banner-carousel" 
+         class="relative w-full h-48 sm:h-72 md:h-80 lg:h-[380px] rounded-[2rem] border-2 border-cocoa shadow-[0_8px_0_#5C3A21] overflow-hidden bg-pastelPink/40 group select-none"
+         onmouseenter="pauseBannerAutoSlide()"
+         onmouseleave="resumeBannerAutoSlide()">
+      
+      <!-- Slides Track -->
+      <div id="banner-slides-track" class="w-full h-full relative">
+        <!-- Slide 1 -->
+        <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-100 z-10">
+          <img src="banner 1.jpg" alt="Strawberry Parfait Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/8B1A1A/FFFDF7?text=Sweet+Cake+-+Strawberry+Parfait+Season'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/50 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
+            <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
+              🍓 Bộ Sưu Tập Dâu Tây Tươi Hokkaido
+            </span>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 z-0">
+          <img src="banner 2.jpg" alt="White Choco Strawberry Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/FAD2E1/5C3A21?text=White+Choco+Strawberry+Series'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/40 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
+            <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
+              🍫 Kem Dâu Tây Sô-Cô-La Trắng Ngọt Ngào
+            </span>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="banner-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 z-0">
+          <img src="banner 3.jpg" alt="Strawberry Sweets Daifuku Banner" class="w-full h-full object-cover" crossorigin="anonymous" onerror="this.src='https://placehold.co/1280x500/D94E4E/FFFDF7?text=Handmade+Strawberry+Sweets'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-cocoa/45 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-4 left-5 sm:bottom-6 sm:left-8 z-20 flex items-center gap-2.5">
+            <span class="px-3.5 py-1 rounded-full bg-cream/95 border-2 border-cocoa text-[11px] sm:text-xs font-extrabold text-cocoa shadow-sm">
+              🍰 Bánh Ngọt & Mochi Dâu Tây Thủ Công
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Left / Right Controls -->
+      <button onclick="changePromoBanner(-1)" aria-label="Banner trước" class="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-cream/90 border-2 border-cocoa text-cocoa flex items-center justify-center shadow-[0_3px_0_#5C3A21] opacity-0 group-hover:opacity-100 transition-all hover:bg-butter active:translate-y-0">
+        <i class="fa-solid fa-chevron-left text-xs sm:text-sm"></i>
+      </button>
+      <button onclick="changePromoBanner(1)" aria-label="Banner tiếp theo" class="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-30 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-cream/90 border-2 border-cocoa text-cocoa flex items-center justify-center shadow-[0_3px_0_#5C3A21] opacity-0 group-hover:opacity-100 transition-all hover:bg-butter active:translate-y-0">
+        <i class="fa-solid fa-chevron-right text-xs sm:text-sm"></i>
+      </button>
+
+      <!-- Bottom Indicators & Progress -->
+      <div class="absolute bottom-4 right-5 sm:bottom-6 sm:right-8 z-30 flex items-center gap-2 bg-cream/90 backdrop-blur-sm px-3 py-1.5 rounded-full border-2 border-cocoa shadow-sm">
+        <button onclick="goToPromoBanner(0)" class="promo-banner-dot w-6 h-2.5 rounded-full bg-cocoa transition-all duration-300" title="Banner 1"></button>
+        <button onclick="goToPromoBanner(1)" class="promo-banner-dot w-2.5 h-2.5 rounded-full bg-cocoa/35 hover:bg-cocoa/60 transition-all duration-300" title="Banner 2"></button>
+        <button onclick="goToPromoBanner(2)" class="promo-banner-dot w-2.5 h-2.5 rounded-full bg-cocoa/35 hover:bg-cocoa/60 transition-all duration-300" title="Banner 3"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================== -->
   <!-- 4. HERO SECTION                            -->
   <!-- ========================================== -->
-  <header class="relative overflow-hidden pt-8 pb-16 lg:py-24 border-b-2 border-cocoa/10">
+  <header class="relative overflow-hidden pt-6 pb-16 lg:py-16 border-b-2 border-cocoa/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
         <!-- Hero Text Content -->
         <div class="lg:col-span-7 text-center lg:text-left">
           <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-butter border-2 border-cocoa text-xs font-bold text-cocoa mb-6 shadow-sm">
-            <span>✨</span> 100% Bơ Pháp & Sô-Cô-La Bỉ Nhập Khẩu
+            <svg class="w-4 h-4 text-caramel inline" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg> 
+            <span>100% Bơ Pháp & Sô-Cô-La Bỉ Nhập Khẩu</span>
           </div>
-          <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold text-cocoa leading-[1.15]">
+          <h1 class="font-serif text-4xl sm:text-6xl lg:text-7xl font-extrabold text-cocoa leading-[1.35]">
             Hương Vị Ngọt Ngào <br/>
             <span class="text-caramel italic">Ấm Áp Mỗi Ngày</span>
           </h1>
@@ -299,7 +362,8 @@
         <!-- Box Configuration Panel -->
         <div class="lg:col-span-5 bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 shadow-[0_8px_0_#5C3A21]">
           <h3 class="font-serif text-xl font-bold text-cocoa mb-4 flex items-center gap-2">
-            <span>🎁</span> 1. Chọn Kích Thước Hộp Bánh
+            <svg class="w-5 h-5 text-caramel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12V22H4V12"/><path d="M22 7H2V12H22V7Z"/><path d="M12 22V7"/><path d="M12 7H7.5C5.5 7 4 5.5 4 3.5C4 2 5.5 2 7.5 2C10 2 12 7 12 7Z"/><path d="M12 7H16.5C18.5 7 20 5.5 20 3.5C20 2 18.5 2 16.5 2C14 2 12 7 12 7Z"/></svg>
+            <span>1. Chọn Kích Thước Hộp Bánh</span>
           </h3>
           <div class="grid grid-cols-2 gap-4 mb-6">
             <button onclick="setBoxCapacity(4)" id="box-cap-4" class="btn-3d-cocoa py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold text-center">
@@ -311,7 +375,8 @@
           </div>
 
           <h3 class="font-serif text-xl font-bold text-cocoa mb-3 flex items-center gap-2">
-            <span>🎀</span> 2. Chọn Màu Nơ Lụa & Thiệp
+            <svg class="w-5 h-5 text-pastelPink" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+            <span>2. Chọn Màu Nơ Lụa & Thiệp</span>
           </h3>
           <div class="space-y-3 mb-6">
             <label class="flex items-center justify-between p-3 rounded-2xl bg-white border-2 border-cocoa cursor-pointer hover:bg-pastelPink/30 transition-colors">
@@ -355,7 +420,10 @@
         <!-- Box Slots Visualizer & Selector -->
         <div class="lg:col-span-7 bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-8 shadow-[0_8px_0_#5C3A21]">
           <h3 class="font-serif text-xl font-bold text-cocoa mb-4 flex items-center justify-between">
-            <span>🍪 3. Sắp Xếp Bánh Vào Hộp Thiếc</span>
+            <span class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-cocoa" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="9" cy="9" r="1.5"/><circle cx="15" cy="10" r="1.5"/><circle cx="12" cy="15" r="1.5"/></svg>
+              <span>3. Sắp Xếp Bánh Vào Hộp Thiếc</span>
+            </span>
             <span class="text-xs text-cocoaLight font-medium">(Nhấn chọn bánh bên dưới)</span>
           </h3>
 
@@ -382,7 +450,34 @@
         <div class="w-full h-80 sm:h-96 rounded-[2.5rem] bg-pastelPink border-2 border-cocoa shadow-[0_10px_0_#5C3A21] overflow-hidden relative flex items-center justify-center">
           <div class="absolute inset-0 bg-[radial-gradient(#FFF1B5_1px,transparent_1px)] bg-[size:16px_16px] opacity-40"></div>
           <div class="text-center p-8 relative z-10">
-            <span class="text-6xl block mb-4">👩‍🍳✨</span>
+            <div class="w-28 h-28 mx-auto mb-4 bg-white border-2 border-cocoa rounded-3xl flex items-center justify-center shadow-[0_4px_0_#5C3A21] overflow-hidden p-1.5 group hover:scale-105 transition-transform">
+              <img src="download.jpg" alt="Cookie Chef Mascot" class="w-full h-full object-contain scale-125" crossorigin="anonymous" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <svg class="hidden w-20 h-20" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Cute Pink Chef Hat -->
+                <path d="M35 38 C20 35 18 18 34 15 C40 6 58 6 65 14 C80 12 85 28 72 35 Z" fill="#FCE4EC" stroke="#D896B0" stroke-width="3" stroke-linejoin="round"/>
+                <rect x="36" y="32" width="32" height="15" rx="3" fill="#FCE4EC" stroke="#D896B0" stroke-width="3" transform="rotate(-8 36 32)"/>
+                <!-- Arms & Legs -->
+                <path d="M26 76 C18 76 16 72 20 69" stroke="#3A1F0D" stroke-width="5" stroke-linecap="round"/>
+                <path d="M88 60 C95 56 96 50 93 48" stroke="#3A1F0D" stroke-width="5" stroke-linecap="round"/>
+                <path d="M48 106 L46 116 C44 117 41 116 41 114" stroke="#3A1F0D" stroke-width="5" stroke-linecap="round"/>
+                <path d="M78 98 L84 105 C87 104 88 101 86 99" stroke="#3A1F0D" stroke-width="5" stroke-linecap="round"/>
+                <!-- Cookie Body -->
+                <circle cx="58" cy="74" r="34" fill="#E39B4B" />
+                <!-- Chocolate Chips -->
+                <ellipse cx="52" cy="52" rx="7" ry="5" fill="#8C5327"/>
+                <ellipse cx="40" cy="60" rx="6" ry="4" fill="#8C5327"/>
+                <ellipse cx="73" cy="60" rx="6" ry="4.5" fill="#8C5327"/>
+                <ellipse cx="75" cy="82" rx="7" ry="5" fill="#8C5327"/>
+                <ellipse cx="44" cy="88" rx="7" ry="4.5" fill="#8C5327"/>
+                <ellipse cx="36" cy="78" rx="4.5" ry="3.5" fill="#8C5327"/>
+                <!-- Cute Face & Rosy Cheeks -->
+                <circle cx="46" cy="73" r="5" fill="#F26B5B" opacity="0.85"/>
+                <circle cx="67" cy="69" r="5" fill="#F26B5B" opacity="0.85"/>
+                <circle cx="49" cy="69" r="3.2" fill="#2A1508"/>
+                <circle cx="63" cy="66" r="3.2" fill="#2A1508"/>
+                <path d="M53 69 Q56 73 59 68" stroke="#2A1508" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
             <h3 class="font-serif text-2xl font-bold text-cocoa">Bếp Bánh Nhỏ - Đong đầy Tình Thân</h3>
             <p class="text-xs text-cocoaLight mt-2 font-medium max-w-sm mx-auto">Được thành lập từ niềm đam mê mang lại những chiếc bánh quy hoàn hảo nhất cho gia đình và bạn bè.</p>
           </div>
@@ -492,7 +587,9 @@
   <!-- ========================================== -->
   <section id="track-order" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-cream border-2 border-cocoa rounded-[2.5rem] p-6 sm:p-10 shadow-[0_10px_0_#5C3A21] text-center">
-      <span class="text-3xl block mb-2">🔍📦</span>
+      <div class="w-16 h-16 mx-auto mb-3 bg-butter border-2 border-cocoa rounded-2xl flex items-center justify-center shadow-sm">
+        <svg class="w-8 h-8 text-cocoa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
       <h2 class="font-serif text-2xl sm:text-3xl font-bold text-cocoa">Tra Cứu Trạng Thái Đơn Hàng</h2>
       <p class="text-xs sm:text-sm text-cocoaLight mt-1 mb-6">Nhập Mã đơn hàng hoặc Số điện thoại để kiểm tra tiến độ nướng bánh và giao hàng.</p>
 
@@ -652,7 +749,9 @@
       <!-- Auth Form View (Login / Register) -->
       <div id="auth-form-view">
         <div class="text-center mb-6">
-          <span class="text-4xl block mb-2">🍪👑</span>
+          <div class="w-16 h-16 mx-auto mb-2 bg-pastelPink border-2 border-cocoa rounded-2xl flex items-center justify-center shadow-sm">
+            <svg class="w-8 h-8 text-cocoa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
           <h3 class="font-serif text-2xl font-bold text-cocoa">Tài Khoản Sweet Crumb</h3>
           <p class="text-xs text-cocoaLight mt-1">Đăng nhập để quản trị hệ thống hoặc lưu đơn hàng dễ dàng.</p>
         </div>
@@ -940,7 +1039,7 @@ Measurement ID: G-410ZZX6XQD
         <div class="lg:col-span-2">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-12 h-12 rounded-2xl bg-white border-2 border-cream flex items-center justify-center overflow-hidden p-1">
-              <img src="logocake1.png" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
+              <img src="Logo Sweet house (1).jpg" alt="Sweet Cake Logo" class="w-full h-full object-contain rounded-xl" crossorigin="anonymous" />
             </div>
             <span class="font-serif text-2xl font-bold text-cream">Sweet Cake</span>
           </div>
@@ -1197,6 +1296,82 @@ Measurement ID: G-410ZZX6XQD
         document.body.appendChild(p);
         setTimeout(() => p.remove(), 850);
       }
+    }
+
+    // ============================================================================
+    // ★ AUTO-SLIDING PROMO BANNER LOGIC ★
+    // ============================================================================
+    let currentBannerIdx = 0;
+    let bannerInterval = null;
+    const BANNER_SLIDE_DELAY = 4000;
+
+    function updatePromoBannerUI() {
+      const slides = document.querySelectorAll('#banner-slides-track .banner-slide');
+      const dots = document.querySelectorAll('.promo-banner-dot');
+      if (!slides.length) return;
+
+      slides.forEach((slide, idx) => {
+        if (idx === currentBannerIdx) {
+          slide.classList.remove('opacity-0', 'z-0');
+          slide.classList.add('opacity-100', 'z-10');
+        } else {
+          slide.classList.remove('opacity-100', 'z-10');
+          slide.classList.add('opacity-0', 'z-0');
+        }
+      });
+
+      dots.forEach((dot, idx) => {
+        if (idx === currentBannerIdx) {
+          dot.className = 'promo-banner-dot w-6 h-2.5 rounded-full bg-cocoa transition-all duration-300';
+        } else {
+          dot.className = 'promo-banner-dot w-2.5 h-2.5 rounded-full bg-cocoa/35 hover:bg-cocoa/60 transition-all duration-300';
+        }
+      });
+    }
+
+    function changePromoBanner(step) {
+      const slides = document.querySelectorAll('#banner-slides-track .banner-slide');
+      if (!slides.length) return;
+      currentBannerIdx = (currentBannerIdx + step + slides.length) % slides.length;
+      updatePromoBannerUI();
+      resetBannerAutoSlide();
+    }
+    window.changePromoBanner = changePromoBanner;
+
+    function goToPromoBanner(idx) {
+      currentBannerIdx = idx;
+      updatePromoBannerUI();
+      resetBannerAutoSlide();
+      playPopSound(560);
+    }
+    window.goToPromoBanner = goToPromoBanner;
+
+    function startBannerAutoSlide() {
+      if (bannerInterval) clearInterval(bannerInterval);
+      bannerInterval = setInterval(() => {
+        const slides = document.querySelectorAll('#banner-slides-track .banner-slide');
+        if (!slides.length) return;
+        currentBannerIdx = (currentBannerIdx + 1) % slides.length;
+        updatePromoBannerUI();
+      }, BANNER_SLIDE_DELAY);
+    }
+
+    function pauseBannerAutoSlide() {
+      if (bannerInterval) {
+        clearInterval(bannerInterval);
+        bannerInterval = null;
+      }
+    }
+    window.pauseBannerAutoSlide = pauseBannerAutoSlide;
+
+    function resumeBannerAutoSlide() {
+      startBannerAutoSlide();
+    }
+    window.resumeBannerAutoSlide = resumeBannerAutoSlide;
+
+    function resetBannerAutoSlide() {
+      pauseBannerAutoSlide();
+      startBannerAutoSlide();
     }
 
     // Hero Switcher
@@ -1498,7 +1673,9 @@ Measurement ID: G-410ZZX6XQD
         } else {
           slotsHTML += `
             <div class="p-3 rounded-2xl bg-white/60 border-2 border-dashed border-cocoa/40 flex flex-col items-center justify-center text-center min-h-[110px]">
-              <span class="text-2xl text-cocoa/30 mb-1">🍪</span>
+              <div class="w-8 h-8 mb-1 text-cocoa/30 flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              </div>
               <span class="text-[11px] font-bold text-cocoaLight">Ô trống #${i+1}</span>
             </div>
           `;
@@ -1625,7 +1802,9 @@ Measurement ID: G-410ZZX6XQD
       if (cart.length === 0) {
         container.innerHTML = `
           <div class="text-center py-16">
-            <span class="text-5xl block mb-2">🛒🍪</span>
+            <div class="w-16 h-16 mx-auto mb-3 bg-butter border-2 border-cocoa rounded-2xl flex items-center justify-center shadow-sm">
+              <svg class="w-8 h-8 text-cocoa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            </div>
             <h4 class="font-serif text-xl font-bold text-cocoa">Giỏ hàng đang trống</h4>
             <p class="text-xs text-cocoaLight mt-1">Hãy chọn ngay vài chiếc bánh quy thơm ngon nhé!</p>
           </div>
@@ -2261,6 +2440,7 @@ Measurement ID: G-410ZZX6XQD
       renderProducts();
       renderBoxBuilder();
       updateCartUI();
+      startBannerAutoSlide();
 
       const splash = document.getElementById('splash-screen');
       const bar = document.getElementById('splash-bar');
